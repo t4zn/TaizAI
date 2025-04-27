@@ -193,13 +193,13 @@ body.dark-mode #userInput {
 /* Dark Mode */
 body.dark-mode .chat-title {
     border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 4vh;
+    padding-bottom: 3vh;
     color: #ffffff; 
 }
 
 body:not(.dark-mode) .chat-title {
     border-bottom: 1px solid #1f1f1f;
-    padding-bottom: 4vh;
+    padding-bottom: 3vh;
     color: #000000;
 }
 

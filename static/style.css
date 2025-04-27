@@ -78,7 +78,7 @@ body.dark-mode .input-area {
     border-radius: 100px;
     padding: 60px;
     font-size: 66px;
-    margin-right: 50px;
+    margin-right: 120px;
     background-color: white; 
     color: black;             
     transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
@@ -89,18 +89,19 @@ body.dark-mode .input-area input{
     border-radius: 8px;
     padding: 60px;
     font-size: 66px;
-    margin-right: 50px;
+    margin-right: 120px;
     background-color: #000000; 
     color: #ffffff;             
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .input-area button {
-    padding: 40px 90px;
+    padding: 60px;
     border: none;
     background-color: #3bf68c;
     color: white;
-    font-size: 80px;
+    font-size: 66px;
+    margin-right: 120px;
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
@@ -113,7 +114,7 @@ body.dark-mode .input-area input{
 .main-menu-btn {
     position: fixed;
     top: 15px;
-    left: 90px;
+    left: 30px;
     background: none;
     border: 1px solid #3b82f6;
     padding: 30px 90px;
@@ -183,6 +184,7 @@ body.dark-mode .popup-btn:hover {
     padding: 30px 90px;
     border-radius: 30px;
     max-width: 75%;
+    font-size: 40px;
     word-wrap: break-word;
     transition: background-color 0.3s, color 0.3s;
 }

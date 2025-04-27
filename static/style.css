@@ -180,6 +180,13 @@ body.dark-mode #userInput {
     text-align: right;
     display: inline-block;      
 }
+.bot {
+    color: black;
+    margin-right: auto;
+    text-align: left;
+    display: inline-block;
+}
+
 
 .send-icon {
     position: absolute;

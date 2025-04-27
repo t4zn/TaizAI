@@ -1,7 +1,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
+    min-height: 100%;
     overflow: hidden; /* Prevent whole page scrolling */
     background-color: #f1f5f9;
     font-family: 'Inter', sans-serif;
@@ -30,6 +30,7 @@ html, body {
 
 /* Chat container */
 .chat-container {
+    flex: 1;
     background: white;
     width: 100vw;
     height: 100vh;

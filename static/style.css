@@ -112,13 +112,6 @@ body.dark-mode #userInput {
     cursor: pointer;
     flex-shrink: 0; /* 👈 Important: button won't shrink */
 }
-
-/* Send Icon */
-.send-icon {
-    width: 7vw;
-    height: 7vw;
-}
-
 /* Dark mode send button */
 body.dark-mode #sendBtn {
     background-color: #3bf68c;

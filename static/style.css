@@ -1,4 +1,3 @@
-/* General Styles */
 body {
     margin: 0;
     background-color: #f1f5f9;
@@ -6,53 +5,109 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* Ensure the body takes at least the full viewport height */
     transition: background-color 0.3s, color 0.3s;
     position: relative;
-    padding: 0 10px; /* Added padding for smaller screens */
+}
+
+/* Top Bar to hold Menu, Title, and Theme Toggle */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white; /* Adjust as needed */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    z-index: 1000;
+    transition: background-color 0.3s;
+}
+body.dark-mode .top-bar {
+    background-color: #1e1e1e; /* Dark mode background for top bar */
 }
 
 .theme-toggle {
-    position: fixed;
-    top: 15px;
-    right: 15px;
     background: none;
     border: none;
     font-size: 24px;
     cursor: pointer;
-    z-index: 1000;
+    z-index: 1001; /* Ensure it's above the top bar */
+    color: #3b82f6; /* Default theme toggle color */
+    transition: color 0.3s;
+}
+body.dark-mode .theme-toggle {
+    color: #ce17a0; /* Dark mode theme toggle color */
+}
+
+.main-menu-btn {
+    background: none;
+    border: 1px solid #3b82f6;
+    padding: 8px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #3b82f6;
+    border-radius: 8px;
+    z-index: 1001; /* Ensure it's above the top bar */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+body.dark-mode .main-menu-btn {
+    color: #ce17a0;
+    border: 1px solid #ce17a0;
 }
 
 .chat-container {
     background: white;
-    width: 100%;
-    max-width: 400px; /* Added max-width */
-    height: 85vh; /* Adjusted height for better fit */
+    width: 95%; /* Adjust width for better mobile view */
+    max-width: 400px; /* Maintain a maximum width */
+    height: 90vh; /* Adjust height to take up more of the viewport */
+    margin-top: 60px; /* Push down below the fixed top bar */
     display: flex;
     flex-direction: column;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     overflow: hidden;
     transition: background-color 0.3s;
-    max-width: 100%; /* Make sure it's responsive */
+}
+body.dark-mode .chat-container {
+    background-color: #1e1e1e;
 }
 
+.chat-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Chat Title Styling */
 .chat-title {
-    text-align: center;
-    font-size: 32px;
+    font-size: 24px; /* Adjusted font size for mobile */
     font-weight: bold;
-    margin: 20px 0;
     transition: color 0.3s ease;
     font-family: 'Arial', sans-serif;
+    margin: 0; /* Remove default margin as it's in the top bar now */
 }
 
-/* Input and Button Areas */
+/* Light Mode Title Color */
+body:not(.dark-mode) .chat-title {
+    color: #3b82f6;
+}
+
+/* Dark Mode Title Color */
+body.dark-mode .chat-title {
+    color: #ce17a0;
+}
+
 .input-area {
     display: flex;
-    flex-wrap: wrap; /* Allow elements to wrap */
     padding: 10px;
     background-color: #e2e8f0;
     transition: background-color 0.3s;
+}
+body.dark-mode .input-area {
+    background-color: #161718;
 }
 
 .input-area input {
@@ -66,10 +121,14 @@ body {
     color: black;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
+body.dark-mode .input-area input{
+    border: 1px solid #000000;
+    background-color: #000000;
+    color: #ffffff;
+}
 
 .input-area button {
-    width: 100%;
-    padding: 10px 0;
+    padding: 10px 20px;
     border: none;
     background-color: #3bf68c;
     color: white;
@@ -77,25 +136,13 @@ body {
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
-    margin-top: 10px; /* Ensure button isn't too close to input */
 }
 
-/* Popup and Menu Button */
-.main-menu-btn {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: none;
-    border: 1px solid #3b82f6;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    color: #3b82f6;
-    border-radius: 8px;
-    z-index: 1000;
-    transition: background-color 0.3s, color 0.3s;
+.input-area button:hover {
+    background-color: #099909;
 }
 
+/* Popup Menu Styles */
 .main-menu-popup {
     position: fixed;
     top: 50%;
@@ -105,12 +152,19 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 250px;
+    width: 80%; /* Adjust width for mobile */
+    max-width: 300px; /* Maintain a maximum width for the popup */
     display: none;
     z-index: 1001;
     transition: background-color 0.3s;
 }
 
+/* Dark Mode Popup Menu */
+body.dark-mode .main-menu-popup {
+    background-color: #333;
+}
+
+/* Popup Button Styles */
 .popup-btn {
     background: none;
     border: 1px solid #3b82f6;
@@ -124,7 +178,18 @@ body {
     transition: 0.3s;
 }
 
-/* Message Styles */
+/* Dark Mode Popup Button */
+body.dark-mode .popup-btn {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+/* Dark Mode Popup Button Hover */
+body.dark-mode .popup-btn:hover {
+    background-color: #ce17a0;
+    color: white;
+}
+
 .message {
     margin-bottom: 15px;
     padding: 10px 15px;
@@ -148,7 +213,7 @@ body {
     text-align: left;
 }
 
-/* Dark Mode Styles */
+/* 🌙 DARK MODE Styles */
 body.dark-mode {
     background-color: #121212;
     color: #f0f0f0;
@@ -166,31 +231,4 @@ body.dark-mode .bot {
 body.dark-mode .user {
     background-color: #ce17a0;
     color: #ffffff;
-}
-
-/* Media Queries for Mobile Devices */
-@media screen and (max-width: 480px) {
-    .chat-container {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-    }
-
-    .chat-title {
-        font-size: 24px;
-    }
-
-    .input-area input {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .input-area button {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .message {
-        max-width: 100%; /* Make message take up full width */
-    }
 }

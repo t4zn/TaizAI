@@ -38,7 +38,7 @@ function parseMarkdown(text) {
 function appendMessage(message, sender) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
-    msgDiv.className = message ${sender};
+    msgDiv.className = `message ${sender}`;
     msgDiv.innerHTML = parseMarkdown(message);  
     chatBox.appendChild(msgDiv);
     chatBox.scrollTop = chatBox.scrollHeight;

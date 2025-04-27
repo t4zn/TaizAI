@@ -3,9 +3,9 @@ body {
     background-color: #f1f5f9;
     font-family: 'Inter', sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Change to column to stack top-bar and chat-container */
     align-items: center;
-    min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+    min-height: 100vh;
     transition: background-color 0.3s, color 0.3s;
     position: relative;
 }
@@ -62,7 +62,7 @@ body.dark-mode .main-menu-btn {
     background: white;
     width: 95%; /* Adjust width for better mobile view */
     max-width: 400px; /* Maintain a maximum width */
-    height: 90vh; /* Adjust height to take up more of the viewport */
+    height: calc(90vh - 60px); /* Adjust height to account for the fixed top bar */
     margin-top: 60px; /* Push down below the fixed top bar */
     display: flex;
     flex-direction: column;

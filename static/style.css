@@ -170,6 +170,7 @@ body.dark-mode #userInput {
     font-size: 4vw;
     word-wrap: break-word;
     transition: background-color 0.3s, color 0.3s;
+    display: block; /* Important for proper alignment */
 }
 
 /* User messages */
@@ -177,16 +178,19 @@ body.dark-mode #userInput {
     background-color: #eaeaea;
     color: black;
     margin-left: auto;
+    margin-right: 2vw; /* Add little spacing from right */
     text-align: right;
-    display: inline-block;      
+    display: block; /* Full block so it aligns to right properly */
 }
+
+/* Bot messages */
 .bot {
     color: black;
     margin-right: auto;
+    margin-left: 2vw; /* Add little spacing from left */
     text-align: left;
-    display: inline-block;
+    display: block;
 }
-
 
 .send-icon {
     position: absolute;

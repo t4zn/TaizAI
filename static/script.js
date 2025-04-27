@@ -169,7 +169,7 @@ function addCopyButton(botMessageDiv) {
 }
 
 function updateCopyIcon(copyIcon) {
-    copyIcon.src = document.body.classList.contains('dark-mode') ? 'static/copydark.png' : 'static/copylight.png';
+    copyIcon.src = document.body.classList.contains('dark-mode') ? 'static/copylight.png' : 'static/copydark.png';
 }
 
 // 🎤 Voice Input (toggle mode)

@@ -42,15 +42,14 @@ body {
     overflow: hidden;
     transition: background-color 0.3s;
 }
-
 /* Chat title */
 .chat-title {
     text-align: center;
-    font-size: 8vw; /* 8% of screen width */
-    font-weight: bold;
+    font-size: 8vw; /* Responsive font size */
+    font-weight: 700; /* Make it bold, clean */
     margin: 2vh 0;
     transition: color 0.3s ease;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Inter', 'Arial', sans-serif;
 }
 
 /* Chat box */

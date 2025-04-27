@@ -60,7 +60,6 @@ body {
 }
 ffffff;
 }
-/* Footer input area - Mobile Friendly */
 .footer {
     display: flex;
     align-items: center;
@@ -71,9 +70,9 @@ ffffff;
     bottom: 0;
     width: 100%;
     z-index: 999;
+    gap: 2vw; /* 👈 Nice small gap between input and button */
 }
 
-/* Dark mode Footer */
 body.dark-mode .footer {
     background-color: #000000;
     border-top: 1px solid #333333;
@@ -81,19 +80,20 @@ body.dark-mode .footer {
 
 /* Input field */
 #userInput {
-    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0; /* 👈 Magic line: makes input flexible without overflow */
     padding: 4vw;
     border: none;
     border-radius: 100px;
     background-color: #f9f9f9;
-    font-size: 4.5vw; /* ✨ Mobile friendly large text */
+    font-size: 4.5vw;
     color: #000;
     outline: none;
-    margin-right: 2vw;
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark mode Input */
+/* Dark mode input */
 body.dark-mode #userInput {
     background-color: #1a1a1a;
     color: #ffffff;
@@ -103,36 +103,25 @@ body.dark-mode #userInput {
 #sendBtn {
     background-color: #3bf68c;
     border: none;
-    width: 14vw;
+    width: 14vw; /* ⬅️ Restore nice large size */
     height: 14vw;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s;
+    flex-shrink: 0; /* 👈 Important: button won't shrink */
 }
 
-/* Dark mode send button stays green */
+/* Send Icon */
+.send-icon {
+    width: 7vw;
+    height: 7vw;
+}
+
+/* Dark mode send button */
 body.dark-mode #sendBtn {
     background-color: #3bf68c;
-}
-
-/* Main menu button */
-.main-menu-btn {
-    position: fixed;
-    top: 2vh;
-    left: 2vw;
-    background: none;
-    border: none;
-    padding: 2vw;
-    cursor: pointer;
-    border-radius: 8px;
-    z-index: 1000;
-    transition: background-color 0.3s, color 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Icon inside the main menu button */

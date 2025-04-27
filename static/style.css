@@ -93,6 +93,31 @@ ffffff;
     transition: 0.3s;
 } 
 
+/* Main menu button */
+.main-menu-btn {
+    position: fixed;
+    top: 2vh;
+    left: 2vw;
+    background: none;
+    border: 1px solid #3b82f6;
+    padding: 2vw;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Icon inside the main menu button */
+.main-menu-btn img {
+    width: 8vw;
+    height: 8vw;
+    object-fit: contain;
+    pointer-events: none; /* So button receives clicks */
+}
+
 /* Main menu popup */
 .main-menu-popup {
     position: fixed;

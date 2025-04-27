@@ -125,7 +125,7 @@ function addCopyButton(botMessageDiv) {
     copyBtn.classList.add('copy-btn');
 
     const copyIcon = document.createElement('img');
-    copyIcon.src = document.body.classList.contains('dark-mode') ? 'copydark.png' : 'copylight.png';
+    copyIcon.src = document.body.classList.contains('dark-mode') ? 'static/copydark.png' : 'static/copylight.png';
     copyIcon.alt = 'Copy';
 
     copyBtn.appendChild(copyIcon);

@@ -17,9 +17,13 @@ body {
     right: 2vw;
     background: none;
     border: none;
-    font-size: 8vw;
     cursor: pointer;
     z-index: 1000;
+}
+.theme-toggle img {
+    width: 8vw;
+    height: 8vw;
+    object-fit: contain;
 }
 
 /* Chat container */
@@ -38,11 +42,10 @@ body {
 /* Chat title */
 .chat-title {
     text-align: center;
-    font-size: 8vw; /* 8% of screen width */
+    font-size: 8vw;
     font-weight: bold;
     margin: 2vh 0;
     transition: color 0.3s ease;
-    font-family: 'Arial', sans-serif;
 }
 
 /* Chat box */
@@ -61,31 +64,31 @@ body {
 }
 .input-area input {
     flex: 1;
-    border: 1px solid #e2e8f0; 
+    border: 1px solid #e2e8f0;
     border-radius: 100px;
     padding: 4vw;
     font-size: 4.5vw;
     margin-right: 2vw;
-    background-color: white; 
-    color: black;             
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 .input-area button {
-    padding: 4vw;
+    padding: 0;
+    background: none;
     border: none;
-    background-color: #3bf68c;
-    color: white;
-    font-size: 6vw;  /* bigger arrow */
-    border-radius: 50%;
+    cursor: pointer;
     width: 12vw;
     height: 12vw;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: 0.3s;
 }
-
+.send-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 
 /* Main menu button */
 .main-menu-btn {
@@ -93,14 +96,14 @@ body {
     top: 2vh;
     left: 2vw;
     background: none;
-    border: 1px solid #3b82f6;
-    padding: 2vw 4vw;
-    font-size: 4vw;
+    border: none;
     cursor: pointer;
-    color: #3b82f6;
-    border-radius: 8px;
     z-index: 1000;
-    transition: background-color 0.3s, color 0.3s;
+}
+.main-menu-btn img {
+    width: 10vw;
+    height: 10vw;
+    object-fit: contain;
 }
 
 /* Main menu popup */
@@ -119,7 +122,7 @@ body {
     transition: background-color 0.3s;
 }
 
-/* Popup button */
+/* Popup buttons */
 .popup-btn {
     background: none;
     border: 1px solid #3b82f6;
@@ -155,28 +158,17 @@ body {
     margin-right: auto;
     text-align: left;
 }
-.send-icon {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-}
-
 
 /* Dark Mode */
-body.dark-mode .chat-title {
-    color: #ce17a0; /* Pink color in Dark Mode */
-}
-
-body:not(.dark-mode) .chat-title {
-    color: #3b82f6; /* Blue color in Light Mode */
-}
-
 body.dark-mode {
     background-color: #121212;
     color: #f0f0f0;
 }
 body.dark-mode .chat-container {
     background-color: #1e1e1e;
+}
+body.dark-mode .chat-title {
+    color: #ce17a0;
 }
 body.dark-mode .bot {
     background-color: #2a2a2a;
@@ -186,20 +178,14 @@ body.dark-mode .user {
     background-color: #ce17a0;
     color: #ffffff;
 }
-body.dark-mode .main-menu-btn {
-    color: #ce17a0;
-    border: 1px solid #ce17a0;
-}
-
-body.dark-mode .popup-btn {
-    color: #ffffff;
-    border: 1px solid #ffffff;
-}
 body.dark-mode .main-menu-popup {
     background-color: #333;
     border: 1px solid #ce17a0;
 }
-
+body.dark-mode .popup-btn {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
 body.dark-mode .popup-btn:hover {
     background-color: #ce17a0;
     color: white;

@@ -124,8 +124,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
-    border-radius: 10px;
+    background-color: #e2e8f0;
+    border-radius: 80px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 4vw;
     width: 80vw;
@@ -137,15 +137,16 @@ body {
 /* Popup button */
 .popup-btn {
     background: none;
-    border: 1px solid #3b82f6;
+    border: 1px solid #000000;
     padding: 3vw 0;
     margin: 2vw 0;
     font-size: 4vw;
-    color: #3b82f6;
+    color: #000000;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 80px;
     width: 100%;
     transition: 0.3s;
+    font-family: 'Inter', 'Arial', sans-serif;
 }
 
 /* Chat messages */
@@ -180,13 +181,13 @@ body {
 /* Dark Mode */
 body.dark-mode .chat-title {
     border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 6vh;
+    padding-bottom: 4vh;
     color: #ffffff; 
 }
 
 body:not(.dark-mode) .chat-title {
     border-bottom: 1px solid #1f1f1f;
-    padding-bottom: 6vh;
+    padding-bottom: 4vh;
     color: #000000;
 }
 
@@ -209,19 +210,25 @@ body.dark-mode .main-menu-btn {
     border:none;
 }
 
-body.dark-mode .popup-btn {
-    color: #ffffff;
-    border: 1px solid #ffffff;
-}
+/* Popup Background in Dark Mode */
 body.dark-mode .main-menu-popup {
-    background-color: #333;
-    border: 1px solid #ce17a0;
+    background-color: #1f1f1f; /* very dark background instead of light blue */
+    border: 1px solid #ffffff; /* white border now */
 }
 
-body.dark-mode .popup-btn:hover {
-    background-color: #ce17a0;
-    color: white;
+/* Popup Buttons in Dark Mode */
+body.dark-mode .popup-btn {
+    color: #ffffff; /* white text */
+    border: 1px solid #ffffff; /* white border */
 }
+
+/* Hover effect on popup buttons in Dark Mode */
+body.dark-mode .popup-btn:hover {
+    background-color: #ffffff; /* white background on hover */
+    color: #000000; /* black text on hover */
+    border-color: #ffffff; /* keep white border */
+}
+
 body.dark-mode .input-area {
     background-color: #161718;
 }

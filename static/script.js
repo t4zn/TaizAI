@@ -1,50 +1,53 @@
+// Send Button
 document.getElementById('sendBtn').addEventListener('click', askBot);
+
+// Enter Key
 document.getElementById('userInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') askBot();
 });
 
+// Ask Bot
 async function askBot() {
     const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
     if (!userText) return;
 
-    appendMessage(userText, 'user');
+    appendUserMessage(userText);
     inputField.value = '';
 
     try {
-        const response = await fetch('/api/ask', {  // 🔥 Corrected endpoint
+        const response = await fetch('/api/ask', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userText })  // 🔥 Corrected key
+            body: JSON.stringify({ message: userText })
         });
 
         const data = await response.json();
-        appendBotMessage(data.reply);  // ✨ New typing function for bot
+        appendBotMessage(data.reply);
     } catch (error) {
         appendBotMessage("⚠️ Error connecting to server.");
     }
 }
 
+// Parse Markdown
 function parseMarkdown(text) {
-    // Convert **bold**
     text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-    // Convert *italic*
     text = text.replace(/(?<!\w)\*(.*?)\*(?!\w)/g, '<i>$1</i>');
-    // Convert __underline__
     text = text.replace(/__(.*?)__/g, '<u>$1</u>');
     return text;
 }
 
-function appendMessage(message, sender) {
+// Append User Message
+function appendUserMessage(message) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
-    msgDiv.className = `message ${sender}`;
-    msgDiv.innerHTML = parseMarkdown(message);  
+    msgDiv.className = 'message user';
+    msgDiv.textContent = message;
     chatBox.appendChild(msgDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// ✨ NEW function for bot messages with typing effect
+// Append Bot Message (with typing effect!)
 function appendBotMessage(message) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
@@ -52,15 +55,16 @@ function appendBotMessage(message) {
     chatBox.appendChild(msgDiv);
 
     let index = 0;
+    let rawText = "";
 
     function type() {
         if (index < message.length) {
-            msgDiv.innerText += message.charAt(index);  // Type plain text
+            rawText += message.charAt(index);
+            msgDiv.textContent = rawText;
             index++;
-            setTimeout(type, 25); // typing speed
+            setTimeout(type, 25); // Speed of typing (adjust if needed)
         } else {
-            // After complete typing, parse into bold/italic
-            msgDiv.innerHTML = parseMarkdown(msgDiv.innerText);
+            msgDiv.innerHTML = parseMarkdown(rawText); // After full message typed
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
@@ -109,6 +113,7 @@ continueChatBtn.addEventListener('click', () => {
     mainMenuPopup.style.display = 'none';
 });
 
+// Update Menu Icon with Theme
 function updateMenuIcon() {
     if (document.body.classList.contains('dark-mode')) {
         menuIcon.src = 'static/Menudark.png';
@@ -116,10 +121,6 @@ function updateMenuIcon() {
         menuIcon.src = 'static/Menulight.png';
     }
 }
-
-// Update menu icon on theme change
 const observer = new MutationObserver(updateMenuIcon);
 observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
-// Set correct menu icon on page load
-updateMenuIcon();
+updateMenuIcon(); // call once on load

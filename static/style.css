@@ -29,28 +29,6 @@ html, body {
     pointer-events: none;
 }
 
-/* Main menu button */
-.main-menu-btn {
-    position: fixed;
-    top: 2vh;
-    left: 2vw;
-    background: none;
-    border: none;
-    padding: 2vw;
-    cursor: pointer;
-    border-radius: 8px;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.main-menu-btn img {
-    width: 8vw;
-    height: 8vw;
-    object-fit: contain;
-    pointer-events: none;
-}
-
 /* Chat container */
 .chat-container {
     flex: 1;
@@ -73,14 +51,12 @@ html, body {
     margin: 2vh 0;
     transition: color 0.3s ease;
     font-family: 'Inter', 'Arial', sans-serif;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 1vh;
 }
 
 /* Chat box */
 .chat-box {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: auto; /* SCROLL inside chat area */
     padding: 4vw;
     display: flex;
     flex-direction: column;
@@ -90,11 +66,16 @@ html, body {
 .footer {
     display: flex;
     align-items: center;
-    gap: 2vw;
     padding: 2vw 3vw;
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
-    flex-shrink: 0;
+    flex-shrink: 0; /* important: no shrinking */
+}
+
+/* Dark mode footer */
+body.dark-mode .footer {
+    background-color: #000000;
+    border-top: 1px solid #333333;
 }
 
 /* Input field */
@@ -114,25 +95,6 @@ body.dark-mode #userInput {
     color: #fff;
 }
 
-/* Mic Button */
-.mic-btn {
-    background: none;
-    border: none;
-    width: 10vw;
-    height: 10vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.mic-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
 /* Send Button */
 #sendBtn {
     background-color: #000000;
@@ -149,12 +111,27 @@ body.dark-mode #userInput {
     transition: background-color 0.3s;
 }
 
-.send-icon {
-    position: absolute;
-    width: 80%;
-    height: 80%;
+/* Main menu button */
+.main-menu-btn {
+    position: fixed;
+    top: 2vh;
+    left: 2vw;
+    background: none;
+    border: none;
+    padding: 2vw;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main-menu-btn img {
+    width: 8vw;
+    height: 8vw;
     object-fit: contain;
-    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 /* Main menu popup */
@@ -172,6 +149,50 @@ body.dark-mode #userInput {
     z-index: 1001;
     transition: background-color 0.3s;
 }
+.message.bot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.message.bot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.copy-container {
+    margin-top: 24px;
+    padding-left: 16px;/* gap between text and button */
+}
+
+
+.copy-btn {
+    background: none;
+    border: none;
+    margin-left: 2vw;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-btn img {
+    width: 42px; /* adjust size if needed */
+    height: 42px;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+    pointer-events: none; 
+}
+/* 📱 Special for Mobile */
+@media (max-width: 600px) {
+    .copy-btn img {
+        width: 22px;
+        height: 22px;
+    }
+}
+
 
 /* Popup button */
 .popup-btn {
@@ -218,74 +239,94 @@ body.dark-mode #userInput {
     display: inline-block;
 }
 
-/* Copy Button */
-.copy-container {
-    margin-top: 24px;
-    padding-left: 16px;
-}
-
-.copy-btn {
-    background: none;
-    border: none;
-    margin-left: 2vw;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.copy-btn img {
-    width: 42px;
-    height: 42px;
+/* Send Icon inside Button */
+.send-icon {
+    position: absolute;
+    width: 80%;
+    height: 80%;
     object-fit: contain;
     transition: opacity 0.3s ease;
-    pointer-events: none;
+}
+/* Mic Button */
+#micBtn {
+    background-color: #000000;
+    border: none;
+    width: 12vw;
+    height: 12vw;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    margin-left: 3vw;
+    transition: background-color 0.3s;
 }
 
-/* Mobile tweaks */
-@media (max-width: 600px) {
-    .copy-btn img {
-        width: 22px;
-        height: 22px;
-    }
+#micBtn img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Dark mode for Mic Button */
+body.dark-mode #micBtn {
+    background-color: #ffffff;
+}
+
+body.dark-mode #micBtn img {
+    filter: invert(1); /* make mic icon white in dark mode */
 }
 
 /* Dark Mode Styling */
+body.dark-mode .chat-title {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 3vh;
+    color: #ffffff;
+}
+body:not(.dark-mode) .chat-title {
+    border-bottom: 1px solid #1f1f1f;
+    padding-bottom: 3vh;
+    color: #000000;
+}
 body.dark-mode {
     background-color: #121212;
     color: #f0f0f0;
 }
-
 body.dark-mode .chat-container {
     background-color: #1e1e1e;
 }
-
-body.dark-mode .chat-title {
-    color: #ffffff;
-    border-bottom: 1px solid #555;
-}
-
 body.dark-mode .bot {
     color: #f0f0f0;
 }
-
 body.dark-mode .user {
     background-color: #2a2a2a;
     color: #ffffff;
 }
-
+body.dark-mode .main-menu-btn {
+    border:none;
+}
 body.dark-mode .main-menu-popup {
     background-color: #1f1f1f;
     border: 1px solid #ffffff;
 }
-
 body.dark-mode .popup-btn {
     color: #ffffff;
     border: 1px solid #ffffff;
 }
-
 body.dark-mode .popup-btn:hover {
     background-color: #ffffff;
     color: #000000;
     border-color: #ffffff;
+}
+body.dark-mode .input-area {
+    background-color: #161718;
+}
+body.dark-mode .input-area input {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
 }

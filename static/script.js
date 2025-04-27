@@ -46,16 +46,17 @@ function appendMessage(message, sender) {
 
 /* 🌙 Theme Toggle */
 const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 
     if (document.body.classList.contains('dark-mode')) {
-        themeToggle.textContent = '🌙';
+        themeIcon.src = '/moon.png'; // Switch to moon
     } else {
-        themeToggle.textContent = '☀️';
+        themeIcon.src = '/sun.png'; // Switch back to sun
     }
 });
-
 /* Main Menu Button Functionality */
 const mainMenuBtn = document.getElementById('mainMenuBtn');
 const mainMenuPopup = document.getElementById('mainMenuPopup');

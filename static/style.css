@@ -58,38 +58,63 @@ body {
     padding: 4vw;
     overflow-y: auto;
 }
-.input-area {
+/* Footer input area - Mobile Friendly */
+.footer {
     display: flex;
+    align-items: center;
     padding: 4vw;
-    background-color: #e2e8f0;
-    transition: background-color 0.3s;
+    background-color: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
 }
-.input-area input {
+
+/* Dark mode Footer */
+body.dark-mode .footer {
+    background-color: #000000;
+    border-top: 1px solid #333333;
+}
+
+/* Input field */
+#userInput {
     flex: 1;
-    border: 1px solid #e2e8f0; 
-    border-radius: 100px;
-    padding: 4vw;
-    font-size: 4.5vw;
-    margin-right: 2vw;
-    background-color: white; 
-    color: black;             
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
-}
-.input-area button {
     padding: 4vw;
     border: none;
+    border-radius: 100px;
+    background-color: #f9f9f9;
+    font-size: 4.5vw; /* ✨ Mobile friendly large text */
+    color: #000;
+    outline: none;
+    margin-right: 2vw;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark mode Input */
+body.dark-mode #userInput {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Send Button */
+#sendBtn {
     background-color: #3bf68c;
-    color: white;
-    font-size: 6vw;  /* bigger arrow */
+    border: none;
+    width: 14vw;
+    height: 14vw;
     border-radius: 50%;
-    width: 12vw;
-    height: 12vw;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: 0.3s;
-} 
+    transition: background-color 0.3s;
+}
+
+/* Dark mode send button stays green */
+body.dark-mode #sendBtn {
+    background-color: #ffffff;
+}
 
 /* Main menu button */
 .main-menu-btn {

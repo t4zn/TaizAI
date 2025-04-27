@@ -1,1 +1,36 @@
-h
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Theme and Main Menu Toggle Buttons -->
+    <button id="themeToggle" class="theme-toggle">☀️</button>
+    <button id="mainMenuBtn" class="main-menu-btn">Menu</button>
+
+    <!-- Popup Menu for Continue Chatting or Start New Chat -->
+    <div id="mainMenuPopup" class="main-menu-popup">
+        <div class="popup-content">
+            <button id="continueChatBtn" class="popup-btn">Continue Chatting</button>
+            <button id="newChatBtn" class="popup-btn">Start New Chat</button>
+            <button id="closePopupBtn" class="popup-btn">Close</button>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <!-- Added Taiz AI title -->
+        <div class="chat-title">Taiz AI</div>
+        
+        <div id="chatBox" class="chat-box"></div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your question here..." autofocus/>
+            <button id="sendBtn">Send</button>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

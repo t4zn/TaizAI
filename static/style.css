@@ -180,11 +180,13 @@ body {
 /* Dark Mode */
 body.dark-mode .chat-title {
     border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 6vh;
     color: #ffffff; 
 }
 
 body:not(.dark-mode) .chat-title {
     border-bottom: 1px solid #1f1f1f;
+    padding-bottom: 6vh;
     color: #000000;
 }
 

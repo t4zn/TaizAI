@@ -247,39 +247,6 @@ body.dark-mode #userInput {
     object-fit: contain;
     transition: opacity 0.3s ease;
 }
-/* Mic Button */
-#micBtn {
-    background-color: #000000;
-    border: none;
-    width: 12vw;
-    height: 12vw;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    margin-left: 3vw;
-    transition: background-color 0.3s;
-}
-
-#micBtn img {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-/* Dark mode for Mic Button */
-body.dark-mode #micBtn {
-    background-color: #ffffff;
-}
-
-body.dark-mode #micBtn img {
-    filter: invert(1); /* make mic icon white in dark mode */
-}
 
 /* Dark Mode Styling */
 body.dark-mode .chat-title {

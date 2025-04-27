@@ -179,11 +179,11 @@ body {
 
 /* Dark Mode */
 body.dark-mode .chat-title {
-    color: #ce17a0; /* Pink color in Dark Mode */
+    color: #000000; 
 }
 
 body:not(.dark-mode) .chat-title {
-    color: #3b82f6; /* Blue color in Light Mode */
+    color: #ffffff;
 }
 
 body.dark-mode {

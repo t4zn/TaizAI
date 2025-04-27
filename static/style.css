@@ -63,6 +63,7 @@ ffffff;
 .footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 4vw;
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
@@ -70,9 +71,10 @@ ffffff;
     bottom: 0;
     width: 100%;
     z-index: 999;
-    gap: 2vw; /* 👈 Nice small gap between input and button */
+    flex-wrap: nowrap; /* 🛠️ Important: prevent button dropping */
 }
 
+/* Dark mode footer */
 body.dark-mode .footer {
     background-color: #000000;
     border-top: 1px solid #333333;
@@ -80,9 +82,8 @@ body.dark-mode .footer {
 
 /* Input field */
 #userInput {
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: 0; /* 👈 Magic line: makes input flexible without overflow */
+    flex: 1;
+    min-width: 0; /* 🛠️ Important: allows flex item to shrink */
     padding: 4vw;
     border: none;
     border-radius: 100px;
@@ -90,6 +91,7 @@ body.dark-mode .footer {
     font-size: 4.5vw;
     color: #000;
     outline: none;
+    margin-right: 2vw;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -103,27 +105,21 @@ body.dark-mode #userInput {
 #sendBtn {
     background-color: #3bf68c;
     border: none;
-    width: 14vw; /* ⬅️ Restore nice large size */
-    height: 14vw;
+    width: 12vw; /* ⬅️ Slightly smaller */
+    height: 12vw;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    flex-shrink: 0; /* 👈 Important: button won't shrink */
+    flex-shrink: 0; /* 🛠️ Important: button won't shrink too small */
 }
+
 /* Dark mode send button */
 body.dark-mode #sendBtn {
     background-color: #3bf68c;
 }
 
-/* Icon inside the main menu button */
-.main-menu-btn img {
-    width: 8vw;
-    height: 8vw;
-    object-fit: contain;
-    pointer-events: none; /* So button receives clicks */
-}
 
 /* Main menu popup */
 .main-menu-popup {

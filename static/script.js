@@ -54,13 +54,13 @@ themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 
     if (document.body.classList.contains('dark-mode')) {
-        themeToggle.src = 'moon.png';
-        menuBtn.src = 'menudark.png';
-        sendIcon.src = 'senddark.png';
+        themeToggle.src = '/static/moon.png';
+        menuBtn.src = '/static/menudark.png';
+        sendIcon.src = '/static/senddark.png';
     } else {
-        themeToggle.src = 'sun.png';
-        menuBtn.src = 'menulight.png';
-        sendIcon.src = 'sendlight.png';
+        themeToggle.src = '/static/sun.png';
+        menuBtn.src = '/static/menulight.png';
+        sendIcon.src = /static/'sendlight.png';
     }
 });
 

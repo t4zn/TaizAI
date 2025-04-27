@@ -110,9 +110,7 @@ body.dark-mode #userInput {
     overflow: hidden;
     transition: background-color 0.3s;
 }
-body.dark-mode #sendBtn {
-    background-color: #ffffff;
-}
+
 /* Main menu button */
 .main-menu-btn {
     position: fixed;
@@ -249,64 +247,7 @@ body.dark-mode #sendBtn {
     object-fit: contain;
     transition: opacity 0.3s ease;
 }
-/* 🎤 Mic Button */
-#micBtn {
-    background-color: #000000;
-    border: none;
-    width: 12vw;
-    height: 12vw;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    margin-left: 3vw;
-    transition: background-color 0.3s;
-}
 
-#micBtn img {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-/* 🛑 Stop Button (same style as mic button) */
-#stopBtn {
-    background-color: #ff0000;
-    border: none;
-    width: 12vw;
-    height: 12vw;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    margin-left: 3vw;
-    transition: background-color 0.3s;
-}
-
-#stopBtn img {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-/* 🌙 Dark Mode for Mic & Stop */
-body.dark-mode #micBtn {
-    background-color: #ffffff;
-}
-
-body.dark-mode #stopBtn {
-    background-color: #ff5555; /* lighter red in dark mode */
-}
 /* Dark Mode Styling */
 body.dark-mode .chat-title {
     border-bottom: 1px solid #e0e0e0;

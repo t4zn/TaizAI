@@ -54,10 +54,10 @@ themeToggle.addEventListener('click', () => {
 
     if (document.body.classList.contains('dark-mode')) {
         themeIcon.src = 'static/Moon.png';
-        sendIcon.src = 'static/Senddark.png';
+        sendIcon.src = 'static/senddark.png';
     } else {
         themeIcon.src = 'static/Sun.png';
-        sendIcon.src = 'static/Sendlight.png';
+        sendIcon.src = 'static/sendlight.png';
     }
 });
 /* Main Menu Button Functionality */

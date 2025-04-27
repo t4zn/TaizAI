@@ -5,17 +5,16 @@
     <title>Smart Chatbot</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
 </head>
+
 <body>
     <!-- Theme and Main Menu Toggle Buttons -->
     <button id="themeToggle" class="theme-toggle">
-    <img id="themeIcon" src="static/Sun.png" alt="Theme Icon">
+        <img id="themeIcon" src="static/Sun.png" alt="Theme Icon">
     </button>
     <button id="mainMenuBtn" class="main-menu-btn">
-    <img id="menuIcon" src="static/Menulight.png" alt="Menu Icon">
+        <img id="menuIcon" src="static/Menulight.png" alt="Menu Icon">
     </button>
-
 
     <!-- Popup Menu for Continue Chatting or Start New Chat -->
     <div id="mainMenuPopup" class="main-menu-popup">
@@ -26,19 +25,23 @@
         </div>
     </div>
 
+    <!-- Main Chat Container -->
     <div class="chat-container">
-        <!-- Added Taiz AI title -->
-        <div class="chat-title">Taiz </div>
-        
+        <div class="chat-title">Taiz</div>
+
+        <!-- Chat messages will appear here -->
         <div id="chatBox" class="chat-box"></div>
+
+        <!-- Footer with input and send button -->
         <footer class="footer">
-          <input type="text" id="userInput" placeholder="Ask anything..." autocomplete="off" autofocus>
-          <button id="sendBtn">
-            <img src="static/sendlight.png" alt="Send" class="send-icon" id="sendIcon">
-          </button>
+            <input type="text" id="userInput" placeholder="Ask anything..." autocomplete="off" autofocus>
+            <button id="sendBtn">
+                <img src="static/sendlight.png" alt="Send" class="send-icon" id="sendIcon">
+            </button>
         </footer>
     </div>
 
+    <!-- JS Scripts -->
     <script src="/static/script.js"></script>
 </body>
 </html>

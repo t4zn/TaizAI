@@ -1,4 +1,4 @@
-
+/* General Body Styling */
 body {
     margin: 0;
     background-color: #f1f5f9;
@@ -7,12 +7,13 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    transition: background-color 0.3s, color 0.3s;
     position: relative;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 10px;
 }
 
 .theme-toggle {
-    position: fixed;
+    position: absolute;
     top: 15px;
     right: 15px;
     background: none;
@@ -22,78 +23,71 @@ body {
     z-index: 1000;
 }
 
+.main-menu-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: none;
+    border: 1px solid #3b82f6;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #3b82f6;
+    border-radius: 8px;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Chat Container */
 .chat-container {
     background: white;
-    width: 400px;
-    height: 600px;
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    max-height: 600px;
     display: flex;
     flex-direction: column;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: background-color 0.3s;
+    margin-top: 60px;
+}
+
+.chat-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+    transition: color 0.3s ease;
+    font-family: 'Arial', sans-serif;
 }
 
 .chat-box {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-}
-/* Chat Title Styling */
-/* Chat Title Styling */
-.chat-title {
-    text-align: center;
-    font-size: 36px;
-    font-weight: bold;
-    margin: 20px 0;
-    transition: color 0.3s ease;  /* Smooth transition for color change */
-    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
-/* Light Mode Title Color */
-body:not(.dark-mode) .chat-title {
-    color: #3b82f6;  /* Light blue color for Light Mode */
-}
-
-/* Dark Mode Title Color */
-body.dark-mode .chat-title {
-    color: #ce17a0;  /* Bright pink color for Dark Mode */
-}
-
-
+/* Input Area Styling */
 .input-area {
     display: flex;
     padding: 10px;
     background-color: #e2e8f0;
     transition: background-color 0.3s;
 }
-body.dark-mode .input-area {
-    display: flex;
-    padding: 10px;
-    background-color: #161718;
-    transition: background-color 0.3s;
-}
+
 .input-area input {
     flex: 1;
-    border: 1px solid #e2e8f0; 
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 10px;
     font-size: 16px;
     margin-right: 10px;
-    background-color: white; 
-    color: black;             
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
-}
-body.dark-mode .input-area input{
-    flex: 1;
-    border: 1px solid #000000; 
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
-    margin-right: 10px;
-    background-color: #000000; 
-    color: #ffffff;             
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    background-color: white;
+    color: black;
 }
 
 .input-area button {
@@ -110,29 +104,8 @@ body.dark-mode .input-area input{
 .input-area button:hover {
     background-color: #099909;
 }
-/* Styling for the Main Menu Button */
-.main-menu-btn {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: none;
-    border: 1px solid #3b82f6;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    color: #3b82f6;
-    border-radius: 8px;
-    z-index: 1000;
-    transition: background-color 0.3s, color 0.3s;
-}
 
-/* Dark Mode Main Menu Button */
-body.dark-mode .main-menu-btn {
-    color: #ce17a0;  /* Change the text color to a contrasting one in dark mode */
-    border: 1px solid #ce17a0;  /* Adjust border color */
-}
-
-/* Popup Menu Styles */
+/* Popup Menu Styling */
 .main-menu-popup {
     position: fixed;
     top: 50%;
@@ -145,15 +118,8 @@ body.dark-mode .main-menu-btn {
     width: 250px;
     display: none;
     z-index: 1001;
-    transition: background-color 0.3s;
 }
 
-/* Dark Mode Popup Menu */
-body.dark-mode .main-menu-popup {
-    background-color: #333;  /* Dark background in the popup for dark mode */
-}
-
-/* Popup Button Styles */
 .popup-btn {
     background: none;
     border: 1px solid #3b82f6;
@@ -167,14 +133,7 @@ body.dark-mode .main-menu-popup {
     transition: 0.3s;
 }
 
-/* Dark Mode Popup Button */
-body.dark-mode .popup-btn {
-    color: #ffffff;  /* White text color */
-    border: 1px solid #ffffff;  /* White border */
-}
-
-/* Dark Mode Popup Button Hover */
-body.dark-mode .popup-btn:hover {
+.popup-btn:hover {
     background-color: #ce17a0;
     color: white;
 }
@@ -185,7 +144,6 @@ body.dark-mode .popup-btn:hover {
     border-radius: 10px;
     max-width: 75%;
     word-wrap: break-word;
-    transition: background-color 0.3s, color 0.3s;
 }
 
 .user {
@@ -220,4 +178,30 @@ body.dark-mode .bot {
 body.dark-mode .user {
     background-color: #ce17a0;
     color: #ffffff;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 500px) {
+    .chat-title {
+        font-size: 22px;
+    }
+
+    .chat-container {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 80vh;
+    }
+
+    .input-area input {
+        font-size: 14px;
+    }
+
+    .input-area button {
+        font-size: 14px;
+    }
+
+    .popup-btn {
+        font-size: 14px;
+    }
 }

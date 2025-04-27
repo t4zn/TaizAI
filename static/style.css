@@ -171,11 +171,11 @@ body.dark-mode #userInput {
 }
 
 .copy-btn img {
-    width: 24px; /* adjust size if needed */
-    height: 24px;
+    width: 42px; /* adjust size if needed */
+    height: 42px;
     object-fit: contain;
     transition: opacity 0.3s ease;
-    pointer-events: none; /* so only button gets clicked */
+    pointer-events: none; 
 }
 
 /* Popup button */

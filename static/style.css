@@ -149,6 +149,23 @@ body.dark-mode #userInput {
     z-index: 1001;
     transition: background-color 0.3s;
 }
+.copy-btn {
+    background: none;
+    border: none;
+    margin-left: 2vw;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-btn img {
+    width: 6vw; /* adjust size if needed */
+    height: 6vw;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* so only button gets clicked */
+}
 
 /* Popup button */
 .popup-btn {

@@ -1,17 +1,26 @@
-// 📩 Send button + Enter key
+// 📥 Elements
 const sendBtn = document.getElementById('sendBtn');
 const userInput = document.getElementById('userInput');
+const micBtn = document.getElementById('micBtn');
+const micIcon = document.getElementById('micIcon');
+const sendIcon = document.getElementById('sendIcon');
+const themeIcon = document.getElementById('themeIcon');
+const menuIcon = document.getElementById('menuIcon');
 
+// 🌎 Global recognition + recording state
+let recognition;
+let isRecording = false;
+
+// 🖱️ Send button & Enter key
 sendBtn.addEventListener('click', askBot);
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') askBot();
 });
 
-// 🎙️ Voice button
-const micBtn = document.getElementById('micBtn');
-micBtn.addEventListener('click', startListening);
+// 🎙️ Mic button
+micBtn.addEventListener('click', toggleListening);
 
-// 🚀 Ask Bot Function
+// 🚀 Ask Bot
 async function askBot() {
     const userText = userInput.value.trim();
     if (!userText) return;
@@ -32,7 +41,7 @@ async function askBot() {
     }
 }
 
-// 🛡️ Escape HTML
+// ✍️ Escape HTML
 function escapeHtml(text) {
     return text.replace(/&/g, "&amp;")
                .replace(/</g, "&lt;")
@@ -41,7 +50,7 @@ function escapeHtml(text) {
                .replace(/'/g, "&#039;");
 }
 
-// ✍️ Basic Markdown Parser
+// ✨ Parse Markdown
 function parseMarkdown(text) {
     return text
         .replace(/^\*\s+/gm, '<br>• ')
@@ -87,26 +96,22 @@ function appendBotMessage(message) {
 
 // 🌙 Theme Toggle
 const themeToggle = document.getElementById('themeToggle');
-const themeIcon = document.getElementById('themeIcon');
-const sendIcon = document.getElementById('sendIcon');
-const micIcon = document.getElementById('micIcon');
-const menuIcon = document.getElementById('menuIcon');
-
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     updateThemeIcons();
+    updateMicIcon(); // 🔥 Also update mic/stop icon after theme change
 });
 
 function updateThemeIcons() {
     if (document.body.classList.contains('dark-mode')) {
         themeIcon.src = 'static/Moon.png';
         sendIcon.src = 'static/senddark.png';
-        micIcon.src = 'static/micdark.png';
+        micIcon.src = isRecording ? 'static/stopdark.png' : 'static/micdark.png';
         menuIcon.src = 'static/Menudark.png';
     } else {
         themeIcon.src = 'static/Sun.png';
         sendIcon.src = 'static/sendlight.png';
-        micIcon.src = 'static/miclight.png';
+        micIcon.src = isRecording ? 'static/stoplight.png' : 'static/miclight.png';
         menuIcon.src = 'static/Menulight.png';
     }
 }
@@ -132,7 +137,7 @@ continueChatBtn.addEventListener('click', () => {
     mainMenuPopup.style.display = 'none';
 });
 
-// 📋 Copy Button under Bot Reply
+// 📋 Copy Button
 function addCopyButton(botMessageDiv) {
     const copyContainer = document.createElement('div');
     copyContainer.className = 'copy-container';
@@ -167,26 +172,52 @@ function updateCopyIcon(copyIcon) {
     copyIcon.src = document.body.classList.contains('dark-mode') ? 'static/copydark.png' : 'static/copylight.png';
 }
 
-// 🎙️ Voice Input
-function startListening() {
+// 🎤 Voice Input (toggle mode)
+function toggleListening() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
         alert("Sorry, your browser doesn't support speech recognition.");
         return;
     }
 
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    if (isRecording) {
+        recognition.stop();
+        return;
+    }
+
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'en-US';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
     recognition.start();
+    isRecording = true;
+    updateMicIcon();
 
     recognition.addEventListener('result', (event) => {
         const transcript = event.results[0][0].transcript;
-        userInput.value = transcript;
+        userInput.value += (userInput.value ? ' ' : '') + transcript;
     });
 
     recognition.addEventListener('error', (event) => {
         console.error('Speech recognition error:', event.error);
+        stopRecognition();
     });
+
+    recognition.addEventListener('end', () => {
+        stopRecognition();
+    });
+}
+
+// 🔁 Helper to stop recording and reset icon
+function stopRecognition() {
+    isRecording = false;
+    updateMicIcon();
+}
+
+function updateMicIcon() {
+    if (document.body.classList.contains('dark-mode')) {
+        micIcon.src = isRecording ? 'static/stopdark.png' : 'static/micdark.png';
+    } else {
+        micIcon.src = isRecording ? 'static/stoplight.png' : 'static/miclight.png';
+    }
 }

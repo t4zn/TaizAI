@@ -58,12 +58,13 @@ body {
     padding: 4vw;
     overflow-y: auto;
 }
-
-/* Footer input area */
+ffffff;
+}
+/* Footer input area - Mobile Friendly */
 .footer {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
+    padding: 4vw;
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
     position: fixed;
@@ -81,13 +82,14 @@ body.dark-mode .footer {
 /* Input field */
 #userInput {
     flex: 1;
-    padding: 12px 15px;
+    padding: 4vw;
     border: none;
-    border-radius: 20px;
+    border-radius: 100px;
     background-color: #f9f9f9;
-    font-size: 16px;
+    font-size: 4.5vw; /* ✨ Mobile friendly large text */
     color: #000;
     outline: none;
+    margin-right: 2vw;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -101,20 +103,17 @@ body.dark-mode #userInput {
 #sendBtn {
     background-color: #3bf68c;
     border: none;
-    margin-left: 10px;
-    padding: 12px;
+    width: 14vw;
+    height: 14vw;
     border-radius: 50%;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
-
-/* Dark mode send button stays same OR you can tweak */
+/* Dark mode send button stays green */
 body.dark-mode #sendBtn {
     background-color: #3bf68c;
 }

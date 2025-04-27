@@ -10,16 +10,24 @@ body {
     position: relative;
 }
 
-/* Theme toggle */
+/* Theme toggle button */
 .theme-toggle {
     position: fixed;
     top: 2vh;
     right: 2vw;
     background: none;
     border: none;
-    font-size: 8vw;
     cursor: pointer;
     z-index: 1000;
+    padding: 0;
+}
+
+/* Icon inside the button */
+.theme-toggle img {
+    width: 8vw;
+    height: 8vw;
+    object-fit: contain;
+    pointer-events: none; /* so click is on button, not the image */
 }
 
 /* Chat container */

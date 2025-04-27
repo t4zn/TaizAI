@@ -57,7 +57,7 @@ html, body {
 /* Chat box */
 .chat-box {
     flex: 1;
-    overflow-y: auto; /* SCROLL inside chat area */
+    overflow-y: scroll; /* SCROLL inside chat area */
     padding: 4vw;
     display: flex;
     flex-direction: column;

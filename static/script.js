@@ -120,6 +120,32 @@ newChatBtn.addEventListener('click', () => {
 continueChatBtn.addEventListener('click', () => {
     mainMenuPopup.style.display = 'none';
 });
+function addCopyButton(botMessageDiv) {
+    const copyBtn = document.createElement('button');
+    copyBtn.classList.add('copy-btn');
+
+    const copyIcon = document.createElement('img');
+    copyIcon.src = document.body.classList.contains('dark-mode') ? 'copydark.png' : 'copylight.png';
+    copyIcon.alt = 'Copy';
+
+    copyBtn.appendChild(copyIcon);
+
+    copyBtn.onclick = () => {
+        const textToCopy = botMessageDiv.innerText;
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                copyIcon.style.opacity = '0.3'; // fade a bit as feedback
+                setTimeout(() => {
+                    copyIcon.style.opacity = '1'; // reset
+                }, 1200);
+            })
+            .catch(err => {
+                console.error('Copy failed', err);
+            });
+    };
+
+    botMessageDiv.appendChild(copyBtn);
+}
 
 // Update menu icon based on theme
 function updateMenuIcon() {

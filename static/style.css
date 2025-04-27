@@ -170,7 +170,6 @@ body.dark-mode #userInput {
     font-size: 4vw;
     word-wrap: break-word;
     transition: background-color 0.3s, color 0.3s;
-    display: inline-block; ; /* Important for proper alignment */
 }
 
 /* User messages */

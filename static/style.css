@@ -176,10 +176,15 @@ body.dark-mode .main-menu-btn {
     color: #ce17a0;
     border: 1px solid #ce17a0;
 }
+
 body.dark-mode .popup-btn {
     color: #ffffff;
     border: 1px solid #ffffff;
 }
+body.dark-mode .main-menu-popup {
+    background-color: #333;  /* Dark background in the popup for dark mode */
+}
+
 body.dark-mode .popup-btn:hover {
     background-color: #ce17a0;
     color: white;

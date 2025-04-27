@@ -29,6 +29,7 @@ async function askBot() {
 
 // Parse basic Markdown (bold, italic, underline)
 function parseMarkdown(text) {
+    text = text.replace(/^\*\s+/gm, '');
     text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');          // **bold**
     text = text.replace(/(?<!\w)\*(.*?)\*(?!\w)/g, '<i>$1</i>');  // *italic*
     text = text.replace(/__(.*?)__/g, '<u>$1</u>');               // __underline__

@@ -70,7 +70,7 @@ function appendBotMessage(message) {
             rawText += message.charAt(index);
             msgDiv.textContent = rawText;
             index++;
-            setTimeout(type, 9); // Typing speed (lower = faster)
+            setTimeout(type, 15); // Typing speed (lower = faster)
         } else {
             msgDiv.innerHTML = parseMarkdown(escapeHtml(rawText));
             chatBox.scrollTop = chatBox.scrollHeight;

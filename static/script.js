@@ -52,9 +52,9 @@ themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 
     if (document.body.classList.contains('dark-mode')) {
-        themeIcon.src = '/moon.png'; // Switch to moon
+        themeIcon.src = '/static/moon.png'; // Switch to moon
     } else {
-        themeIcon.src = '/sun.png'; // Switch back to sun
+        themeIcon.src = '/static/sun.png'; // Switch back to sun
     }
 });
 /* Main Menu Button Functionality */

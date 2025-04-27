@@ -83,4 +83,4 @@ newChatBtn.addEventListener('click', () => {
 continueChatBtn.addEventListener('click', () => {
     // Close the popup and continue chatting
     mainMenuPopup.style.display = 'none';
-}); 
+});

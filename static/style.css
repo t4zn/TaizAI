@@ -222,3 +222,48 @@ body.dark-mode .user {
     background-color: #ce17a0;
     color: #ffffff;
 }
+/* 📱 Mobile Responsive Fix */
+@media (max-width: 768px) {
+  .chat-title {
+    font-size: 40px; /* Smaller title */
+  }
+
+  .input-area {
+    padding: 10px;
+  }
+
+  .input-area input {
+    padding: 15px;
+    font-size: 18px;
+    margin-right: 10px;
+  }
+
+  .input-area button {
+    padding: 15px;
+    font-size: 18px;
+    margin-right: 10px;
+  }
+
+  .main-menu-btn {
+    padding: 10px;
+    font-size: 20px;
+    top: 10px;
+    left: 10px;
+  }
+
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    font-size: 40px;
+  }
+
+  .message {
+    font-size: 20px;
+    padding: 15px 20px;
+  }
+
+  .main-menu-popup {
+    width: 90%; /* Wider popup on mobile */
+    padding: 15px;
+  }
+}

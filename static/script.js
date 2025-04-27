@@ -47,14 +47,17 @@ function appendMessage(message, sender) {
 /* 🌙 Theme Toggle */
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
+const sendIcon = document.getElementById('sendIcon');
 
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 
     if (document.body.classList.contains('dark-mode')) {
-        themeIcon.src = 'static/Moon.png'; // Switch to moon
+        themeIcon.src = 'static/Moon.png';
+        sendIcon.src = 'static/Senddark.png';
     } else {
-        themeIcon.src = 'static/Sun.png'; // Switch back to sun
+        themeIcon.src = 'static/Sun.png';
+        sendIcon.src = 'static/Sendlight.png';
     }
 });
 /* Main Menu Button Functionality */

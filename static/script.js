@@ -4,6 +4,9 @@ document.getElementById('userInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') askBot();
 });
 
+// Voice button trigger
+document.getElementById('micBtn').addEventListener('click', startListening);
+
 // Send user message + get bot reply
 async function askBot() {
     const inputField = document.getElementById('userInput');
@@ -73,7 +76,7 @@ function appendBotMessage(message) {
             setTimeout(type, 15);
         } else {
             msgDiv.innerHTML = parseMarkdown(escapeHtml(rawText));
-            addCopyButton(msgDiv); // Add copy button after typing finishes
+            addCopyButton(msgDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
@@ -84,6 +87,7 @@ function appendBotMessage(message) {
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
 const sendIcon = document.getElementById('sendIcon');
+const micIcon = document.getElementById('micIcon');
 
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
@@ -95,10 +99,12 @@ function updateThemeIcons() {
         themeIcon.src = 'static/Moon.png';
         sendIcon.src = 'static/senddark.png';
         menuIcon.src = 'static/Menudark.png';
+        micIcon.src = 'static/micdark.png';
     } else {
         themeIcon.src = 'static/Sun.png';
         sendIcon.src = 'static/sendlight.png';
         menuIcon.src = 'static/Menulight.png';
+        micIcon.src = 'static/miclight.png';
     }
 }
 
@@ -125,7 +131,6 @@ continueChatBtn.addEventListener('click', () => {
 });
 
 // ------------------ COPY BUTTON BELOW BOT REPLY ------------------ //
-
 function addCopyButton(botMessageDiv) {
     const copyContainer = document.createElement('div');
     copyContainer.classList.add('copy-container');
@@ -165,4 +170,28 @@ function updateCopyIcon(copyIcon) {
     } else {
         copyIcon.src = 'static/copylight.png';
     }
+}
+
+// ------------------ VOICE INPUT FUNCTIONALITY ------------------ //
+function startListening() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert("Sorry, your browser doesn't support speech recognition.");
+        return;
+    }
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('userInput').value = transcript;
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+    };
 }

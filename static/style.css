@@ -163,6 +163,14 @@ body {
 
 
 /* Dark Mode */
+body.dark-mode .chat-title {
+    color: #ce17a0; /* Pink color in Dark Mode */
+}
+
+body:not(.dark-mode) .chat-title {
+    color: #3b82f6; /* Blue color in Light Mode */
+}
+
 body.dark-mode {
     background-color: #121212;
     color: #f0f0f0;

@@ -110,7 +110,9 @@ body.dark-mode #userInput {
     overflow: hidden;
     transition: background-color 0.3s;
 }
-
+body.dark-mode #sendBtn {
+    background-color: #ffffff;
+}
 /* Main menu button */
 .main-menu-btn {
     position: fixed;

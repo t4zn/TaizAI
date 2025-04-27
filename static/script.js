@@ -88,9 +88,9 @@ continueChatBtn.addEventListener('click', () => {
 });
 function updateMenuIcon() {
     if (document.body.classList.contains('dark-mode')) {
-        menuIcon.src = 'images/menu-dark.png'; // Menu dark image
+        menuIcon.src = 'static/Menudark.png'; // Menu dark image
     } else {
-        menuIcon.src = 'images/menu-light.png'; // Menu light image
+        menuIcon.src = 'static/Menulight.png'; // Menu light image
     }
 }
 

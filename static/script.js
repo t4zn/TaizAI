@@ -1,18 +1,16 @@
-// Send Button
+// Send button + Enter key trigger
 document.getElementById('sendBtn').addEventListener('click', askBot);
-
-// Enter Key
-document.getElementById('userInput').addEventListener('keypress', function(e) {
+document.getElementById('userInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') askBot();
 });
 
-// Ask Bot
+// Send user message + get bot reply
 async function askBot() {
     const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
     if (!userText) return;
 
-    appendUserMessage(userText);
+    appendMessage(userText, 'user');
     inputField.value = '';
 
     try {
@@ -29,25 +27,34 @@ async function askBot() {
     }
 }
 
-// Parse Markdown
+// Parse basic Markdown (bold, italic, underline)
 function parseMarkdown(text) {
-    text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-    text = text.replace(/(?<!\w)\*(.*?)\*(?!\w)/g, '<i>$1</i>');
-    text = text.replace(/__(.*?)__/g, '<u>$1</u>');
+    text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');          // **bold**
+    text = text.replace(/(?<!\w)\*(.*?)\*(?!\w)/g, '<i>$1</i>');  // *italic*
+    text = text.replace(/__(.*?)__/g, '<u>$1</u>');               // __underline__
     return text;
 }
 
-// Append User Message
-function appendUserMessage(message) {
+// Escape HTML to prevent issues during typing
+function escapeHtml(text) {
+    return text.replace(/&/g, "&amp;")
+               .replace(/</g, "&lt;")
+               .replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;")
+               .replace(/'/g, "&#039;");
+}
+
+// Append user message immediately
+function appendMessage(message, sender) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
-    msgDiv.className = 'message user';
-    msgDiv.textContent = message;
+    msgDiv.className = `message ${sender}`;
+    msgDiv.innerHTML = parseMarkdown(escapeHtml(message));  
     chatBox.appendChild(msgDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Append Bot Message (with typing effect!)
+// Append bot message with typing animation
 function appendBotMessage(message) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
@@ -62,9 +69,9 @@ function appendBotMessage(message) {
             rawText += message.charAt(index);
             msgDiv.textContent = rawText;
             index++;
-            setTimeout(type, 25); // Speed of typing (adjust if needed)
+            setTimeout(type, 20); // Typing speed (lower = faster)
         } else {
-            msgDiv.innerHTML = parseMarkdown(rawText); // After full message typed
+            msgDiv.innerHTML = parseMarkdown(escapeHtml(rawText));
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
@@ -88,7 +95,7 @@ themeToggle.addEventListener('click', () => {
     }
 });
 
-/* Main Menu Button Functionality */
+/* 📋 Main Menu Button Functionality */
 const mainMenuBtn = document.getElementById('mainMenuBtn');
 const menuIcon = document.getElementById('menuIcon');
 const mainMenuPopup = document.getElementById('mainMenuPopup');
@@ -105,7 +112,7 @@ closePopupBtn.addEventListener('click', () => {
 });
 
 newChatBtn.addEventListener('click', () => {
-    chatBox.innerHTML = '';
+    document.getElementById('chatBox').innerHTML = '';
     mainMenuPopup.style.display = 'none';
 });
 
@@ -113,7 +120,7 @@ continueChatBtn.addEventListener('click', () => {
     mainMenuPopup.style.display = 'none';
 });
 
-// Update Menu Icon with Theme
+// Update menu icon based on theme
 function updateMenuIcon() {
     if (document.body.classList.contains('dark-mode')) {
         menuIcon.src = 'static/Menudark.png';
@@ -121,6 +128,10 @@ function updateMenuIcon() {
         menuIcon.src = 'static/Menulight.png';
     }
 }
+
+// Watch for theme change
 const observer = new MutationObserver(updateMenuIcon);
 observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-updateMenuIcon(); // call once on load
+
+// Set correct menu icon initially
+updateMenuIcon();

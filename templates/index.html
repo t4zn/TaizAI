@@ -1,35 +1,37 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chat App</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Smart Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body class="light-mode">
+<body>
+    <!-- Theme and Main Menu Toggle Buttons -->
+    <button id="themeToggle" class="theme-toggle">☀️</button>
+    <button id="mainMenuBtn" class="main-menu-btn">Menu</button>
 
-  <!-- Header -->
-  <header class="header">
-    <img src="menu-light.png" alt="Menu" id="menu-btn" class="icon">
-    <h1 class="chat-title">Chat</h1>
-    <img src="sun-icon.png" alt="Toggle Theme" id="theme-toggle" class="icon">
-  </header>
+    <!-- Popup Menu for Continue Chatting or Start New Chat -->
+    <div id="mainMenuPopup" class="main-menu-popup">
+        <div class="popup-content">
+            <button id="continueChatBtn" class="popup-btn">Continue Chatting</button>
+            <button id="newChatBtn" class="popup-btn">Start New Chat</button>
+            <button id="closePopupBtn" class="popup-btn">Close</button>
+        </div>
+    </div>
 
-  <!-- Chat Messages -->
-  <main class="chat-container" id="chat-container">
-    <!-- Dynamic messages appear here -->
-  </main>
+    <div class="chat-container">
+        <!-- Added Taiz AI title -->
+        <div class="chat-title">Taiz AI</div>
+        
+        <div id="chatBox" class="chat-box"></div>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
-    <button id="send-btn">
-      <img src="send-light.png" alt="Send" class="send-icon" id="send-icon">
-    </button>
-  </footer>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ask anything..." autofocus/>
+            <button id="sendBtn" class="send-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/60/60525.png" alt="Send" class="send-icon">
+            </button>
+        </div>
+    </div>
 
-  <!-- Your backend-connected JavaScript -->
-  <script src="/static/script.js"></script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

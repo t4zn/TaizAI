@@ -1,89 +1,86 @@
-// Send button click and Enter keypress
-document.getElementById('send-btn').addEventListener('click', askBot);
-document.getElementById('user-input').addEventListener('keypress', function(e) {
+document.getElementById('sendBtn').addEventListener('click', askBot);
+document.getElementById('userInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') askBot();
 });
 
-// Asking Bot
 async function askBot() {
-    const inputField = document.getElementById('user-input');
+    const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
     if (!userText) return;
 
     appendMessage(userText, 'user');
     inputField.value = '';
-
+    
     try {
-        const response = await fetch('/api/ask', {
+        const response = await fetch('/api/ask', {  // 🔥 Corrected endpoint
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userText })
+            body: JSON.stringify({ message: userText })  // 🔥 Corrected key
         });
 
         const data = await response.json();
-        appendMessage(data.reply, 'bot');
+        appendMessage(data.reply, 'bot');  // 🔥 Corrected field
     } catch (error) {
         appendMessage("⚠️ Error connecting to server.", 'bot');
     }
 }
 
-// Markdown Parser
 function parseMarkdown(text) {
+    // Convert **bold**
     text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    // Convert *italic*
     text = text.replace(/(?<!\w)\*(.*?)\*(?!\w)/g, '<i>$1</i>');
+    // Convert __underline__
     text = text.replace(/__(.*?)__/g, '<u>$1</u>');
     return text;
 }
 
-// Appending Messages
 function appendMessage(message, sender) {
-    const chatContainer = document.getElementById('chat-container');
+    const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
-    msgDiv.className = `message ${sender}`;
-    msgDiv.innerHTML = parseMarkdown(message);
-    chatContainer.appendChild(msgDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    msgDiv.className = message ${sender};
+    msgDiv.innerHTML = parseMarkdown(message);  
+    chatBox.appendChild(msgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-/* 🌙 Theme Toggle, Menu Icon & Send Icon Change */
-const themeToggle = document.getElementById('theme-toggle');
-const menuBtn = document.getElementById('menu-btn');
-const sendIcon = document.getElementById('send-icon');
-
+/* 🌙 Theme Toggle */
+const themeToggle = document.getElementById('themeToggle');
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 
     if (document.body.classList.contains('dark-mode')) {
-        themeToggle.src = '/static/moon.png';
-        menuBtn.src = '/static/menudark.png';
-        sendIcon.src = '/static/senddark.png';
+        themeToggle.textContent = '🌙';
     } else {
-        themeToggle.src = '/static/sun.png';
-        menuBtn.src = '/static/menulight.png';
-        sendIcon.src = /static/'sendlight.png';
+        themeToggle.textContent = '☀️';
     }
 });
 
-/* 🍔 Main Menu Popup Handling (if you still want it) */
-const mainMenuBtn = document.getElementById('menu-btn');
+/* Main Menu Button Functionality */
+const mainMenuBtn = document.getElementById('mainMenuBtn');
 const mainMenuPopup = document.getElementById('mainMenuPopup');
 const newChatBtn = document.getElementById('newChatBtn');
 const continueChatBtn = document.getElementById('continueChatBtn');
 const closePopupBtn = document.getElementById('closePopupBtn');
+const chatBox = document.getElementById('chatBox');
 
 mainMenuBtn.addEventListener('click', () => {
-    if (mainMenuPopup) mainMenuPopup.style.display = 'block';
+    // Show the popup when the menu button is clicked
+    mainMenuPopup.style.display = 'block';
 });
 
-closePopupBtn?.addEventListener('click', () => {
-    if (mainMenuPopup) mainMenuPopup.style.display = 'none';
+closePopupBtn.addEventListener('click', () => {
+    // Close the popup when the "Close" button is clicked
+    mainMenuPopup.style.display = 'none';
 });
 
-newChatBtn?.addEventListener('click', () => {
-    document.getElementById('chat-container').innerHTML = '';
-    if (mainMenuPopup) mainMenuPopup.style.display = 'none';
+newChatBtn.addEventListener('click', () => {
+    // Clear the chat history to start a new chat
+    chatBox.innerHTML = '';
+    mainMenuPopup.style.display = 'none';
 });
 
-continueChatBtn?.addEventListener('click', () => {
-    if (mainMenuPopup) mainMenuPopup.style.display = 'none';
-});
+continueChatBtn.addEventListener('click', () => {
+    // Close the popup and continue chatting
+    mainMenuPopup.style.display = 'none';
+}); 

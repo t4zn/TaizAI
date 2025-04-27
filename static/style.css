@@ -192,8 +192,8 @@ body.dark-mode #sendBtn {
 }
 
 .send-icon {
-    width: 100%;
-    height: 100%;
+    width: 140%;
+    height: 140%;
     object-fit: cover;
     transition: 0.3s;
 }

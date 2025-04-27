@@ -163,7 +163,8 @@ body.dark-mode #userInput {
 }
 
 .copy-container {
-    margin-top: 24px; /* gap between text and button */
+    margin-top: 24px;
+    padding-left: 16px;/* gap between text and button */
 }
 
 

@@ -170,7 +170,7 @@ body.dark-mode #userInput {
     font-size: 4vw;
     word-wrap: break-word;
     transition: background-color 0.3s, color 0.3s;
-    display: flex; ; /* Important for proper alignment */
+    display: inline-block; ; /* Important for proper alignment */
 }
 
 /* User messages */
@@ -180,7 +180,7 @@ body.dark-mode #userInput {
     margin-left: auto;
     margin-right: 2vw; /* Add little spacing from right */
     text-align: right;
-    display: fit-content; ; /* Full block so it aligns to right properly */
+    display: block; ; /* Full block so it aligns to right properly */
 }
 
 /* Bot messages */

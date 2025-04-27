@@ -75,11 +75,17 @@ body {
     border: none;
     background-color: #3bf68c;
     color: white;
-    font-size: 4.5vw;
-    border-radius: 8px;
+    font-size: 6vw;  /* bigger arrow */
+    border-radius: 50%;
+    width: 12vw;
+    height: 12vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: 0.3s;
 }
+
 
 /* Main menu button */
 .main-menu-btn {

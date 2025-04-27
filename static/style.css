@@ -94,7 +94,6 @@ body {
     transition: 0.3s;
 }
 
-
 /* Main menu button */
 .main-menu-btn {
     position: fixed;
@@ -102,13 +101,22 @@ body {
     left: 2vw;
     background: none;
     border: 1px solid #3b82f6;
-    padding: 2vw 4vw;
-    font-size: 4vw;
+    padding: 2vw;
     cursor: pointer;
-    color: #3b82f6;
     border-radius: 8px;
     z-index: 1000;
     transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Icon inside the main menu button */
+.main-menu-btn img {
+    width: 8vw;
+    height: 8vw;
+    object-fit: contain;
+    pointer-events: none; /* So button receives clicks */
 }
 
 /* Main menu popup */

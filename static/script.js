@@ -55,7 +55,7 @@ function appendMessage(message, sender) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Append bot message with typing animation
+// Append bot message with typing animation and add copy button
 function appendBotMessage(message) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
@@ -70,13 +70,42 @@ function appendBotMessage(message) {
             rawText += message.charAt(index);
             msgDiv.textContent = rawText;
             index++;
-            setTimeout(type, 15); // Typing speed (lower = faster)
+            setTimeout(type, 15);
         } else {
             msgDiv.innerHTML = parseMarkdown(escapeHtml(rawText));
             chatBox.scrollTop = chatBox.scrollHeight;
+            addCopyButton(msgDiv); // 🚀 Add copy button after typing
         }
     }
     type();
+}
+
+// Add copy button to bot message
+function addCopyButton(botMessageDiv) {
+    const copyBtn = document.createElement('button');
+    copyBtn.classList.add('copy-btn');
+
+    const copyIcon = document.createElement('img');
+    copyIcon.src = document.body.classList.contains('dark-mode') ? 'static/copydark.png' : 'static/copylight.png';
+    copyIcon.alt = 'Copy';
+
+    copyBtn.appendChild(copyIcon);
+
+    copyBtn.onclick = () => {
+        const textToCopy = botMessageDiv.innerText;
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                copyIcon.style.opacity = '0.3'; // feedback animation
+                setTimeout(() => {
+                    copyIcon.style.opacity = '1';
+                }, 1200);
+            })
+            .catch(err => {
+                console.error('Copy failed', err);
+            });
+    };
+
+    botMessageDiv.appendChild(copyBtn);
 }
 
 /* 🌙 Theme Toggle */
@@ -120,32 +149,6 @@ newChatBtn.addEventListener('click', () => {
 continueChatBtn.addEventListener('click', () => {
     mainMenuPopup.style.display = 'none';
 });
-function addCopyButton(botMessageDiv) {
-    const copyBtn = document.createElement('button');
-    copyBtn.classList.add('copy-btn');
-
-    const copyIcon = document.createElement('img');
-    copyIcon.src = document.body.classList.contains('dark-mode') ? 'static/copydark.png' : 'static/copylight.png';
-    copyIcon.alt = 'Copy';
-
-    copyBtn.appendChild(copyIcon);
-
-    copyBtn.onclick = () => {
-        const textToCopy = botMessageDiv.innerText;
-        navigator.clipboard.writeText(textToCopy)
-            .then(() => {
-                copyIcon.style.opacity = '0.3'; // fade a bit as feedback
-                setTimeout(() => {
-                    copyIcon.style.opacity = '1'; // reset
-                }, 1200);
-            })
-            .catch(err => {
-                console.error('Copy failed', err);
-            });
-    };
-
-    botMessageDiv.appendChild(copyBtn);
-}
 
 // Update menu icon based on theme
 function updateMenuIcon() {

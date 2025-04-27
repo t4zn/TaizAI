@@ -10,7 +10,7 @@ async function askBot() {
 
     appendMessage(userText, 'user');
     inputField.value = '';
-    
+
     try {
         const response = await fetch('/api/ask', {  // 🔥 Corrected endpoint
             method: 'POST',
@@ -19,23 +19,10 @@ async function askBot() {
         });
 
         const data = await response.json();
-        appendBotMessage(data.reply);  // Typing effect here!
+        appendBotMessage(data.reply);  // ✨ New typing function for bot
     } catch (error) {
         appendBotMessage("⚠️ Error connecting to server.");
     }
-}
-
-// Typing animation function
-function typeText(element, text, speed = 30) {
-    let index = 0;
-    function type() {
-        if (index < text.length) {
-            element.innerHTML += text.charAt(index);
-            index++;
-            setTimeout(type, speed);
-        }
-    }
-    type();
 }
 
 function parseMarkdown(text) {
@@ -48,7 +35,6 @@ function parseMarkdown(text) {
     return text;
 }
 
-// Normal user message (instant add)
 function appendMessage(message, sender) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
@@ -58,17 +44,27 @@ function appendMessage(message, sender) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Bot message (animated typing add)
+// ✨ NEW function for bot messages with typing effect
 function appendBotMessage(message) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message bot';
     chatBox.appendChild(msgDiv);
 
-    const parsedText = parseMarkdown(message);
-    typeText(msgDiv, parsedText, 25);  // Adjust speed here (smaller = faster)
-    
-    chatBox.scrollTop = chatBox.scrollHeight;
+    let index = 0;
+
+    function type() {
+        if (index < message.length) {
+            msgDiv.innerText += message.charAt(index);  // Type plain text
+            index++;
+            setTimeout(type, 25); // typing speed
+        } else {
+            // After complete typing, parse into bold/italic
+            msgDiv.innerHTML = parseMarkdown(msgDiv.innerText);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+    type();
 }
 
 /* 🌙 Theme Toggle */
@@ -95,7 +91,6 @@ const mainMenuPopup = document.getElementById('mainMenuPopup');
 const newChatBtn = document.getElementById('newChatBtn');
 const continueChatBtn = document.getElementById('continueChatBtn');
 const closePopupBtn = document.getElementById('closePopupBtn');
-const chatBox = document.getElementById('chatBox');
 
 mainMenuBtn.addEventListener('click', () => {
     mainMenuPopup.style.display = 'block';
@@ -122,9 +117,9 @@ function updateMenuIcon() {
     }
 }
 
-// Watch for theme changes and update menu icon
+// Update menu icon on theme change
 const observer = new MutationObserver(updateMenuIcon);
 observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
-// Set correct menu icon on load
+// Set correct menu icon on page load
 updateMenuIcon();

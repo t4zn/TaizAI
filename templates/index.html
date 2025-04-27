@@ -4,34 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Chatbot</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Theme and Main Menu Toggle Buttons -->
-    <button id="themeToggle" class="theme-toggle">☀️</button>
-    <button id="mainMenuBtn" class="main-menu-btn">Menu</button>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
-    <!-- Popup Menu for Continue Chatting or Start New Chat -->
-    <div id="mainMenuPopup" class="main-menu-popup">
-        <div class="popup-content">
-            <button id="continueChatBtn" class="popup-btn">Continue Chatting</button>
-            <button id="newChatBtn" class="popup-btn">Start New Chat</button>
-            <button id="closePopupBtn" class="popup-btn">Close</button>
-        </div>
-    </div>
-
+    <!-- Chat Container -->
     <div class="chat-container">
-        <!-- Added Taiz AI title -->
-        <div class="chat-title">Taiz AI</div>
+        <h1 class="chat-title">Chatbot</h1>
         
-        <div id="chatBox" class="chat-box"></div>
+        <!-- Chat Messages -->
+        <div class="messages" id="messages"></div>
 
+        <!-- Input Area -->
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Type your question here..." autofocus/>
-            <button id="sendBtn">Send</button>
+            <input type="text" id="userInput" placeholder="Type a message..." />
+            <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
-    <script src="/static/script.js"></script>
-</body>
-</html>
+    <!-- Main Menu Button -->
+    <button class="main-menu-btn" onclick="toggleMenu()">Menu</button>
+
+    <!-- Main Menu Popup -->
+    <div class="main-menu-popup" id="menu">
+        <button class="popup-btn" onclick="toggleTheme()">Toggle Dark Mode</button>
+        <button class="popup-btn" onclick="clearChat()">Clear Chat</button>
+        <button class="popup-btn" onclick="closeMenu()">Close</button>
+    </div>
+
+    <script>
+        // Theme Toggle Function
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const themeButton = document.querySelector('.theme-toggle');
+            themeButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        // Menu Toggle Function
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closeMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = 'none';
+        }
+
+        // Sending Message Function
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (userInput) {
+                displayMessage(userInput, 'user');
+                document.getElementById('userInput').v

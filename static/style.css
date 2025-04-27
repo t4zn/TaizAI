@@ -24,8 +24,8 @@ body {
 
 /* Icon inside the button */
 .theme-toggle img {
-    width: 8vw;
-    height: 8vw;
+    width: 12vw;
+    height: 12vw;
     object-fit: contain;
     pointer-events: none; /* so click is on button, not the image */
 }

@@ -1,4 +1,4 @@
-/* General Body Styling */
+/* General Styles */
 body {
     margin: 0;
     background-color: #f1f5f9;
@@ -7,13 +7,13 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    position: relative;
     transition: background-color 0.3s, color 0.3s;
-    padding: 10px;
+    position: relative;
+    padding: 0 10px; /* Added padding for smaller screens */
 }
 
 .theme-toggle {
-    position: absolute;
+    position: fixed;
     top: 15px;
     right: 15px;
     background: none;
@@ -23,57 +23,33 @@ body {
     z-index: 1000;
 }
 
-.main-menu-btn {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: none;
-    border: 1px solid #3b82f6;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    color: #3b82f6;
-    border-radius: 8px;
-    z-index: 1000;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-/* Chat Container */
 .chat-container {
     background: white;
     width: 100%;
-    max-width: 400px;
-    height: 100%;
-    max-height: 600px;
+    max-width: 400px; /* Added max-width */
+    height: 85vh; /* Adjusted height for better fit */
     display: flex;
     flex-direction: column;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     overflow: hidden;
     transition: background-color 0.3s;
-    margin-top: 60px;
+    max-width: 100%; /* Make sure it's responsive */
 }
 
 .chat-title {
     text-align: center;
-    font-size: 24px;
+    font-size: 32px;
     font-weight: bold;
     margin: 20px 0;
     transition: color 0.3s ease;
     font-family: 'Arial', sans-serif;
 }
 
-.chat-box {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-/* Input Area Styling */
+/* Input and Button Areas */
 .input-area {
     display: flex;
+    flex-wrap: wrap; /* Allow elements to wrap */
     padding: 10px;
     background-color: #e2e8f0;
     transition: background-color 0.3s;
@@ -88,10 +64,12 @@ body {
     margin-right: 10px;
     background-color: white;
     color: black;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 .input-area button {
-    padding: 10px 20px;
+    width: 100%;
+    padding: 10px 0;
     border: none;
     background-color: #3bf68c;
     color: white;
@@ -99,13 +77,25 @@ body {
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
+    margin-top: 10px; /* Ensure button isn't too close to input */
 }
 
-.input-area button:hover {
-    background-color: #099909;
+/* Popup and Menu Button */
+.main-menu-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: none;
+    border: 1px solid #3b82f6;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #3b82f6;
+    border-radius: 8px;
+    z-index: 1000;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Popup Menu Styling */
 .main-menu-popup {
     position: fixed;
     top: 50%;
@@ -118,6 +108,7 @@ body {
     width: 250px;
     display: none;
     z-index: 1001;
+    transition: background-color 0.3s;
 }
 
 .popup-btn {
@@ -133,17 +124,14 @@ body {
     transition: 0.3s;
 }
 
-.popup-btn:hover {
-    background-color: #ce17a0;
-    color: white;
-}
-
+/* Message Styles */
 .message {
     margin-bottom: 15px;
     padding: 10px 15px;
     border-radius: 10px;
     max-width: 75%;
     word-wrap: break-word;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .user {
@@ -160,7 +148,7 @@ body {
     text-align: left;
 }
 
-/* 🌙 DARK MODE Styles */
+/* Dark Mode Styles */
 body.dark-mode {
     background-color: #121212;
     color: #f0f0f0;
@@ -180,28 +168,29 @@ body.dark-mode .user {
     color: #ffffff;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 500px) {
-    .chat-title {
-        font-size: 22px;
-    }
-
+/* Media Queries for Mobile Devices */
+@media screen and (max-width: 480px) {
     .chat-container {
         width: 100%;
-        height: 100%;
         max-width: 100%;
-        max-height: 80vh;
+        height: auto;
+    }
+
+    .chat-title {
+        font-size: 24px;
     }
 
     .input-area input {
         font-size: 14px;
+        padding: 8px;
     }
 
     .input-area button {
         font-size: 14px;
+        padding: 8px;
     }
 
-    .popup-btn {
-        font-size: 14px;
+    .message {
+        max-width: 100%; /* Make message take up full width */
     }
 }

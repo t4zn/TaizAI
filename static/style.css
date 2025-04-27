@@ -1,13 +1,13 @@
-body {
+html, body {
     margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Prevent whole page scrolling */
     background-color: #f1f5f9;
     font-family: 'Inter', sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    flex-direction: column;
     transition: background-color 0.3s, color 0.3s;
-    position: relative;
 }
 
 /* Theme toggle button */
@@ -21,13 +21,11 @@ body {
     z-index: 1000;
     padding: 0;
 }
-
-/* Icon inside the button */
 .theme-toggle img {
     width: 12vw;
     height: 12vw;
     object-fit: contain;
-    pointer-events: none; /* so click is on button, not the image */
+    pointer-events: none;
 }
 
 /* Chat container */
@@ -42,11 +40,12 @@ body {
     overflow: hidden;
     transition: background-color 0.3s;
 }
+
 /* Chat title */
 .chat-title {
     text-align: center;
-    font-size: 8vw; /* Responsive font size */
-    font-weight: 700; /* Make it bold, clean */
+    font-size: 8vw;
+    font-weight: 700;
     margin: 2vh 0;
     transition: color 0.3s ease;
     font-family: 'Inter', 'Arial', sans-serif;
@@ -55,18 +54,23 @@ body {
 /* Chat box */
 .chat-box {
     flex: 1;
+    overflow-y: auto; /* ALLOW scroll inside only chat area */
     padding: 4vw;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
-/* Footer input area - Mobile Friendly */
+
+/* Footer input area */
 .footer {
     display: flex;
     align-items: center;
-    padding: 2vw 3vw; /* Reduced padding */
+    padding: 2vw 3vw;
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
+    flex-shrink: 0; /* Footer doesn't grow or shrink */
 }
 
+/* Dark mode footer */
 body.dark-mode .footer {
     background-color: #000000;
     border-top: 1px solid #333333;
@@ -75,7 +79,7 @@ body.dark-mode .footer {
 /* Input field */
 #userInput {
     flex: 1;
-    padding: 3vw 4vw; /* reduced padding */
+    padding: 3vw 4vw;
     border: none;
     border-radius: 50px;
     background-color: #f9f9f9;
@@ -93,8 +97,8 @@ body.dark-mode #userInput {
 #sendBtn {
     background-color: #000000;
     border: none;
-    width: 12vw;  /* reduced from 14vw */
-    height: 12vw; /* reduced from 14vw */
+    width: 12vw;
+    height: 12vw;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -104,7 +108,6 @@ body.dark-mode #userInput {
     overflow: hidden;
     transition: background-color 0.3s;
 }
-
 
 /* Main menu button */
 .main-menu-btn {
@@ -122,13 +125,11 @@ body.dark-mode #userInput {
     align-items: center;
     justify-content: center;
 }
-
-/* Icon inside the main menu button */
 .main-menu-btn img {
     width: 8vw;
     height: 8vw;
     object-fit: contain;
-    pointer-events: none; /* So button receives clicks */
+    pointer-events: none;
 }
 
 /* Main menu popup */
@@ -161,6 +162,7 @@ body.dark-mode #userInput {
     transition: 0.3s;
     font-family: 'Inter', 'Arial', sans-serif;
 }
+
 /* Chat messages */
 .message {
     margin-bottom: 3vw;
@@ -177,42 +179,40 @@ body.dark-mode #userInput {
     background-color: #eaeaea;
     color: black;
     margin-left: auto;
-    margin-right: 2vw; /* Add little spacing from right */
+    margin-right: 2vw;
     text-align: right;
-    display: block; ; /* Full block so it aligns to right properly */
+    display: inline-block;
 }
 
 /* Bot messages */
 .bot {
     color: black;
     margin-right: auto;
-    margin-left: 2vw; /* Add little spacing from left */
+    margin-left: 2vw;
     text-align: left;
     display: block;
 }
 
+/* Send Icon inside Button */
 .send-icon {
     position: absolute;
     width: 80%;
     height: 80%;
     object-fit: contain;
-    transition: opacity 0.3s ease
+    transition: opacity 0.3s ease;
 }
 
-
-/* Dark Mode */
+/* Dark Mode Styling */
 body.dark-mode .chat-title {
     border-bottom: 1px solid #e0e0e0;
     padding-bottom: 3vh;
-    color: #ffffff; 
+    color: #ffffff;
 }
-
 body:not(.dark-mode) .chat-title {
     border-bottom: 1px solid #1f1f1f;
     padding-bottom: 3vh;
     color: #000000;
 }
-
 body.dark-mode {
     background-color: #121212;
     color: #f0f0f0;
@@ -230,26 +230,19 @@ body.dark-mode .user {
 body.dark-mode .main-menu-btn {
     border:none;
 }
-
-/* Popup Background in Dark Mode */
 body.dark-mode .main-menu-popup {
-    background-color: #1f1f1f; /* very dark background instead of light blue */
-    border: 1px solid #ffffff; /* white border now */
+    background-color: #1f1f1f;
+    border: 1px solid #ffffff;
 }
-
-/* Popup Buttons in Dark Mode */
 body.dark-mode .popup-btn {
-    color: #ffffff; /* white text */
-    border: 1px solid #ffffff; /* white border */
+    color: #ffffff;
+    border: 1px solid #ffffff;
 }
-
-/* Hover effect on popup buttons in Dark Mode */
 body.dark-mode .popup-btn:hover {
-    background-color: #ffffff; /* white background on hover */
-    color: #000000; /* black text on hover */
-    border-color: #ffffff; /* keep white border */
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
 }
-
 body.dark-mode .input-area {
     background-color: #161718;
 }

@@ -2,7 +2,8 @@ html, body {
     margin: 0;
     padding: 0;
     min-height: 100%;
-    overflow: hidden; /* Prevent whole page scrolling */
+    height: 100%;
+    overflow: hidden; /* prevent full page scroll */
     background-color: #f1f5f9;
     font-family: 'Inter', sans-serif;
     display: flex;
@@ -31,14 +32,14 @@ html, body {
 /* Chat container */
 .chat-container {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     background: white;
     width: 100vw;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    overflow: hidden;
     transition: background-color 0.3s;
 }
 
@@ -55,7 +56,7 @@ html, body {
 /* Chat box */
 .chat-box {
     flex: 1;
-    overflow-y: auto; /* ALLOW scroll inside only chat area */
+    overflow-y: auto; /* SCROLL inside chat area */
     padding: 4vw;
     display: flex;
     flex-direction: column;
@@ -68,7 +69,7 @@ html, body {
     padding: 2vw 3vw;
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
-    flex-shrink: 0; /* Footer doesn't grow or shrink */
+    flex-shrink: 0; /* important: no shrinking */
 }
 
 /* Dark mode footer */
@@ -191,7 +192,7 @@ body.dark-mode #userInput {
     margin-right: auto;
     margin-left: 2vw;
     text-align: left;
-    display: block;
+    display: inline-block;
 }
 
 /* Send Icon inside Button */

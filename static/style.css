@@ -60,66 +60,38 @@ body {
 }
 ffffff;
 }
-.footer {
+.input-area {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 4vw;
-    background-color: #ffffff;
-    border-top: 1px solid #e0e0e0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 999;
-    flex-wrap: nowrap; /* 🛠️ Important: prevent button dropping */
+    background-color: #e2e8f0;
+    transition: background-color 0.3s;
 }
-
-/* Dark mode footer */
-body.dark-mode .footer {
-    background-color: #000000;
-    border-top: 1px solid #333333;
-}
-
-/* Input field */
-#userInput {
+.input-area input {
     flex: 1;
-    min-width: 0; /* 🛠️ Important: allows flex item to shrink */
+    border: 1px solid #e2e8f0; 
+    border-radius: 100px;
+    padding: 4vw;
+    font-size: 4.5vw;
+    margin-right: 2vw;
+    background-color: white; 
+    color: black;             
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
+}
+.input-area button {
     padding: 4vw;
     border: none;
-    border-radius: 100px;
-    background-color: #f9f9f9;
-    font-size: 4.5vw;
-    color: #000;
-    outline: none;
-    margin-right: 2vw;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-/* Dark mode input */
-body.dark-mode #userInput {
-    background-color: #1a1a1a;
-    color: #ffffff;
-}
-
-/* Send Button */
-#sendBtn {
     background-color: #3bf68c;
-    border: none;
-    width: 12vw; /* ⬅️ Slightly smaller */
-    height: 12vw;
+    color: white;
+    font-size: 6vw;  /* bigger arrow */
     border-radius: 50%;
+    width: 12vw;
+    height: 12vw;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    flex-shrink: 0; /* 🛠️ Important: button won't shrink too small */
-}
-
-/* Dark mode send button */
-body.dark-mode #sendBtn {
-    background-color: #3bf68c;
-}
-
+    transition: 0.3s;
+} 
 
 /* Main menu popup */
 .main-menu-popup {

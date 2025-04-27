@@ -45,14 +45,23 @@ function parseMarkdown(text) {
     return text;
 }
 
+// Smart Scroll function (fix scroll issue)
+function smartScrollToBottom() {
+    const chatBox = document.getElementById('chatBox');
+    const isAtBottom = chatBox.scrollHeight - chatBox.scrollTop <= chatBox.clientHeight + 50;
+    if (isAtBottom) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+}
+
 // Append user message immediately
 function appendMessage(message, sender) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender}`;
-    msgDiv.innerHTML = parseMarkdown(escapeHtml(message));  
+    msgDiv.innerHTML = parseMarkdown(escapeHtml(message));
     chatBox.appendChild(msgDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    smartScrollToBottom(); // 👈 use smart scroll
 }
 
 // Append bot message with typing animation and copy button
@@ -74,7 +83,7 @@ function appendBotMessage(message) {
         } else {
             msgDiv.innerHTML = parseMarkdown(escapeHtml(rawText));
             addCopyButton(msgDiv); // Add copy button after typing finishes
-            chatBox.scrollTop = chatBox.scrollHeight;
+            smartScrollToBottom(); // 👈 use smart scroll
         }
     }
     type();

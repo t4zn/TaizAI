@@ -62,16 +62,11 @@ body {
 .footer {
     display: flex;
     align-items: center;
-    padding: 4vw;
+    padding: 2vw 3vw; /* Reduced padding */
     background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 999;
 }
 
-/* Dark mode Footer */
 body.dark-mode .footer {
     background-color: #000000;
     border-top: 1px solid #333333;
@@ -80,41 +75,36 @@ body.dark-mode .footer {
 /* Input field */
 #userInput {
     flex: 1;
-    padding: 4vw;
+    padding: 3vw 4vw; /* reduced padding */
     border: none;
-    border-radius: 100px;
+    border-radius: 50px;
     background-color: #f9f9f9;
-    font-size: 4.5vw; /* ✨ Mobile friendly large text */
+    font-size: 4vw;
     color: #000;
     outline: none;
-    margin-right: 2vw;
-    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark mode Input */
 body.dark-mode #userInput {
     background-color: #1a1a1a;
-    color: #ffffff;
+    color: #fff;
 }
 
 /* Send Button */
 #sendBtn {
     background-color: #000000;
     border: none;
-    width: 14vw;
-    height: 14vw;
+    width: 12vw;  /* reduced from 14vw */
+    height: 12vw; /* reduced from 14vw */
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: 0.3s;;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s;
 }
 
-/* Dark mode send button stays green */
-body.dark-mode #sendBtn {
-    background-color: #ffffff;
-}
 
 /* Main menu button */
 .main-menu-btn {
@@ -192,8 +182,9 @@ body.dark-mode #sendBtn {
 }
 
 .send-icon {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    width: 80%;
+    height: 80%;
     object-fit: cover;
     transition: opacity 0.3s ease
 }

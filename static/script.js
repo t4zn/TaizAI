@@ -59,6 +59,7 @@ themeToggle.addEventListener('click', () => {
 });
 /* Main Menu Button Functionality */
 const mainMenuBtn = document.getElementById('mainMenuBtn');
+const menuIcon = document.getElementById('menuIcon');
 const mainMenuPopup = document.getElementById('mainMenuPopup');
 const newChatBtn = document.getElementById('newChatBtn');
 const continueChatBtn = document.getElementById('continueChatBtn');
@@ -85,3 +86,18 @@ continueChatBtn.addEventListener('click', () => {
     // Close the popup and continue chatting
     mainMenuPopup.style.display = 'none';
 });
+function updateMenuIcon() {
+    if (document.body.classList.contains('dark-mode')) {
+        menuIcon.src = 'images/menu-dark.png'; // Menu dark image
+    } else {
+        menuIcon.src = 'images/menu-light.png'; // Menu light image
+    }
+}
+
+// Update the menu icon when theme is changed
+// Listen to changes on the body (optional better version)
+const observer = new MutationObserver(updateMenuIcon);
+observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+// Set correct menu icon on page load
+updateMenuIcon();

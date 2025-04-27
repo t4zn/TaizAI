@@ -1,32 +1,17 @@
-// 📥 Elements
-const sendBtn = document.getElementById('sendBtn');
-const userInput = document.getElementById('userInput');
-const micBtn = document.getElementById('micBtn');
-const micIcon = document.getElementById('micIcon');
-const sendIcon = document.getElementById('sendIcon');
-const themeIcon = document.getElementById('themeIcon');
-const menuIcon = document.getElementById('menuIcon');
-
-// 🌎 Global recognition + recording state
-let recognition;
-let isRecording = false;
-
-// 🖱️ Send button & Enter key
-sendBtn.addEventListener('click', askBot);
-userInput.addEventListener('keypress', (e) => {
+// Send button + Enter key trigger
+document.getElementById('sendBtn').addEventListener('click', askBot);
+document.getElementById('userInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') askBot();
 });
 
-// 🎙️ Mic button
-micBtn.addEventListener('click', toggleListening);
-
-// 🚀 Ask Bot
+// Send user message + get bot reply
 async function askBot() {
-    const userText = userInput.value.trim();
+    const inputField = document.getElementById('userInput');
+    const userText = inputField.value.trim();
     if (!userText) return;
 
     appendMessage(userText, 'user');
-    userInput.value = '';
+    inputField.value = '';
 
     try {
         const response = await fetch('/api/ask', {
@@ -34,6 +19,7 @@ async function askBot() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: userText })
         });
+
         const data = await response.json();
         appendBotMessage(data.reply);
     } catch (error) {
@@ -41,7 +27,7 @@ async function askBot() {
     }
 }
 
-// ✍️ Escape HTML
+// Escape HTML to prevent issues during typing
 function escapeHtml(text) {
     return text.replace(/&/g, "&amp;")
                .replace(/</g, "&lt;")
@@ -50,26 +36,26 @@ function escapeHtml(text) {
                .replace(/'/g, "&#039;");
 }
 
-// ✨ Parse Markdown
+// Basic Markdown (bold, italic, underline)
 function parseMarkdown(text) {
-    return text
-        .replace(/^\*\s+/gm, '<br>• ')
-        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-        .replace(/(?<!\w)\*(.*?)\*(?!\w)/g, '<i>$1</i>')
-        .replace(/__(.*?)__/g, '<u>$1</u>');
+    text = text.replace(/^\*\s+/gm, '<br>• ');
+    text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    text = text.replace(/(?<!\w)\*(.*?)\*(?!\w)/g, '<i>$1</i>');
+    text = text.replace(/__(.*?)__/g, '<u>$1</u>');
+    return text;
 }
 
-// 💬 Append User Message
+// Append user message immediately
 function appendMessage(message, sender) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender}`;
-    msgDiv.innerHTML = parseMarkdown(escapeHtml(message));
+    msgDiv.innerHTML = parseMarkdown(escapeHtml(message));  
     chatBox.appendChild(msgDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// 🤖 Append Bot Message (typing effect)
+// Append bot message with typing animation and copy button
 function appendBotMessage(message) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
@@ -87,37 +73,38 @@ function appendBotMessage(message) {
             setTimeout(type, 15);
         } else {
             msgDiv.innerHTML = parseMarkdown(escapeHtml(rawText));
-            addCopyButton(msgDiv);
+            addCopyButton(msgDiv); // Add copy button after typing finishes
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
     type();
 }
 
-// 🌙 Theme Toggle
+/* 🌙 Theme Toggle */
 const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const sendIcon = document.getElementById('sendIcon');
+
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
     updateThemeIcons();
-    updateMicIcon(); // 🔥 Also update mic/stop icon after theme change
 });
 
 function updateThemeIcons() {
     if (document.body.classList.contains('dark-mode')) {
         themeIcon.src = 'static/Moon.png';
         sendIcon.src = 'static/senddark.png';
-        micIcon.src = isRecording ? 'static/stopdark.png' : 'static/micdark.png';
         menuIcon.src = 'static/Menudark.png';
     } else {
         themeIcon.src = 'static/Sun.png';
         sendIcon.src = 'static/sendlight.png';
-        micIcon.src = isRecording ? 'static/stoplight.png' : 'static/miclight.png';
         menuIcon.src = 'static/Menulight.png';
     }
 }
 
-// 📋 Main Menu
+/* 📋 Main Menu Button */
 const mainMenuBtn = document.getElementById('mainMenuBtn');
+const menuIcon = document.getElementById('menuIcon');
 const mainMenuPopup = document.getElementById('mainMenuPopup');
 const newChatBtn = document.getElementById('newChatBtn');
 const continueChatBtn = document.getElementById('continueChatBtn');
@@ -137,87 +124,45 @@ continueChatBtn.addEventListener('click', () => {
     mainMenuPopup.style.display = 'none';
 });
 
-// 📋 Copy Button
+// ------------------ COPY BUTTON BELOW BOT REPLY ------------------ //
+
 function addCopyButton(botMessageDiv) {
     const copyContainer = document.createElement('div');
-    copyContainer.className = 'copy-container';
+    copyContainer.classList.add('copy-container');
 
     const copyBtn = document.createElement('button');
-    copyBtn.className = 'copy-btn';
+    copyBtn.classList.add('copy-btn');
 
     const copyIcon = document.createElement('img');
     updateCopyIcon(copyIcon);
-    copyIcon.alt = 'Copy';
 
+    copyIcon.alt = 'Copy';
     copyBtn.appendChild(copyIcon);
     copyContainer.appendChild(copyBtn);
     botMessageDiv.appendChild(copyContainer);
 
-    copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(botMessageDiv.innerText)
+    copyBtn.onclick = () => {
+        const textToCopy = botMessageDiv.innerText;
+        navigator.clipboard.writeText(textToCopy)
             .then(() => {
                 copyIcon.style.opacity = '0.3';
                 setTimeout(() => {
                     copyIcon.style.opacity = '1';
                 }, 1200);
             })
-            .catch(err => console.error('Copy failed', err));
-    });
+            .catch(err => {
+                console.error('Copy failed', err);
+            });
+    };
 
     const observer = new MutationObserver(() => updateCopyIcon(copyIcon));
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 }
 
 function updateCopyIcon(copyIcon) {
-    copyIcon.src = document.body.classList.contains('dark-mode') ? 'static/copylight.png' : 'static/copydark.png';
-}
-
-// 🎤 Voice Input (toggle mode)
-function toggleListening() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert("Sorry, your browser doesn't support speech recognition.");
-        return;
-    }
-
-    if (isRecording) {
-        recognition.stop();
-        return;
-    }
-
-    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.start();
-    isRecording = true;
-    updateMicIcon();
-
-    recognition.addEventListener('result', (event) => {
-        const transcript = event.results[0][0].transcript;
-        userInput.value += (userInput.value ? ' ' : '') + transcript;
-    });
-
-    recognition.addEventListener('error', (event) => {
-        console.error('Speech recognition error:', event.error);
-        stopRecognition();
-    });
-
-    recognition.addEventListener('end', () => {
-        stopRecognition();
-    });
-}
-
-// 🔁 Helper to stop recording and reset icon
-function stopRecognition() {
-    isRecording = false;
-    updateMicIcon();
-}
-
-function updateMicIcon() {
     if (document.body.classList.contains('dark-mode')) {
-        micIcon.src = isRecording ? 'static/stopdark.png' : 'static/micdark.png';
+        copyIcon.src = 'static/copydark.png';
     } else {
-        micIcon.src = isRecording ? 'static/stoplight.png' : 'static/miclight.png';
+        copyIcon.src = 'static/copylight.png';
     }
 }

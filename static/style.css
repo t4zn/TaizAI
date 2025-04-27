@@ -195,7 +195,7 @@ body.dark-mode #sendBtn {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: 0.3s;
+    transition: opacity 0.3s ease
 }
 
 

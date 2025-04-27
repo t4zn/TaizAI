@@ -1,200 +1,158 @@
+/* Import Inter font */
 body {
-    margin: 0;
-    background-color: #f1f5f9;
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    transition: background-color 0.3s, color 0.3s;
-    position: relative;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  color: #000000;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Theme toggle */
-.theme-toggle {
-    position: fixed;
-    top: 2vh;
-    right: 2vw;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 1000;
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #000000;
+  color: #ffffff;
 }
-.theme-toggle img {
-    width: 8vw;
-    height: 8vw;
-    object-fit: contain;
+
+/* Header styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+body.dark-mode .header {
+  border-bottom: 1px solid #333333;
+}
+
+/* Icon styling */
+.icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 }
 
 /* Chat container */
 .chat-container {
-    background: white;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    overflow: hidden;
-    transition: background-color 0.3s;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Chat title */
-.chat-title {
-    text-align: center;
-    font-size: 8vw;
-    font-weight: bold;
-    margin: 2vh 0;
-    transition: color 0.3s ease;
+/* Bot message */
+.bot-message {
+  align-self: flex-start;
+  background: none;
+  color: inherit;
+  padding: 10px 15px;
+  margin: 8px 0;
+  font-size: 16px;
+  line-height: 1.4;
+  position: relative;
 }
 
-/* Chat box */
-.chat-box {
-    flex: 1;
-    padding: 4vw;
-    overflow-y: auto;
+/* User message */
+.user-message {
+  align-self: flex-end;
+  background-color: #f0f0f0;
+  color: #000000;
+  padding: 10px 15px;
+  border-radius: 20px;
+  margin: 8px 0;
+  max-width: 70%;
 }
 
-/* Input area */
-.input-area {
-    display: flex;
-    padding: 4vw;
-    background-color: #e2e8f0;
-    transition: background-color 0.3s;
-}
-.input-area input {
-    flex: 1;
-    border: 1px solid #e2e8f0;
-    border-radius: 100px;
-    padding: 4vw;
-    font-size: 4.5vw;
-    margin-right: 2vw;
-    background-color: white;
-    color: black;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-}
-.input-area button {
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 12vw;
-    height: 12vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.send-icon {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+body.dark-mode .user-message {
+  background-color: #2a2a2a;
+  color: #ffffff;
 }
 
-/* Main menu button */
-.main-menu-btn {
-    position: fixed;
-    top: 2vh;
-    left: 2vw;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 1000;
-}
-.main-menu-btn img {
-    width: 10vw;
-    height: 10vw;
-    object-fit: contain;
+/* Footer input area */
+.footer {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
 }
 
-/* Main menu popup */
-.main-menu-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 4vw;
-    width: 80vw;
-    display: none;
-    z-index: 1001;
-    transition: background-color 0.3s;
+body.dark-mode .footer {
+  background-color: #000000;
+  border-top: 1px solid #333333;
 }
 
-/* Popup buttons */
-.popup-btn {
-    background: none;
-    border: 1px solid #3b82f6;
-    padding: 3vw 0;
-    margin: 2vw 0;
-    font-size: 4vw;
-    color: #3b82f6;
-    cursor: pointer;
-    border-radius: 8px;
-    width: 100%;
-    transition: 0.3s;
+/* Input field */
+#user-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 20px;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  color: #000;
+  outline: none;
 }
 
-/* Chat messages */
-.message {
-    margin-bottom: 3vw;
-    padding: 4vw 6vw;
-    border-radius: 8vw;
-    max-width: 75%;
-    font-size: 4vw;
-    word-wrap: break-word;
-    transition: background-color 0.3s, color 0.3s;
-}
-.user {
-    background-color: #3b82f6;
-    color: white;
-    margin-left: auto;
-    text-align: right;
-}
-.bot {
-    background-color: #e2e8f0;
-    color: black;
-    margin-right: auto;
-    text-align: left;
+body.dark-mode #user-input {
+  background-color: #1a1a1a;
+  color: #fff;
 }
 
-/* Dark Mode */
-body.dark-mode {
-    background-color: #121212;
-    color: #f0f0f0;
+/* Send button */
+#send-btn {
+  background: #000;
+  border: none;
+  outline: none;
+  margin-left: 10px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
-body.dark-mode .chat-container {
-    background-color: #1e1e1e;
+
+#send-btn img.send-icon {
+  width: 22px;
+  height: 22px;
+  filter: invert(1);
 }
-body.dark-mode .chat-title {
-    color: #ce17a0;
+
+body.light-mode #send-btn {
+  background: #000;
 }
-body.dark-mode .bot {
-    background-color: #2a2a2a;
-    color: #f0f0f0;
+
+body.dark-mode #send-btn {
+  background: #fff;
 }
-body.dark-mode .user {
-    background-color: #ce17a0;
-    color: #ffffff;
+
+body.dark-mode #send-btn img.send-icon {
+  filter: invert(0);
 }
-body.dark-mode .main-menu-popup {
-    background-color: #333;
-    border: 1px solid #ce17a0;
+
+/* Scrollbar (optional customization) */
+.chat-container::-webkit-scrollbar {
+  width: 6px;
 }
-body.dark-mode .popup-btn {
-    color: #ffffff;
-    border: 1px solid #ffffff;
+
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 3px;
 }
-body.dark-mode .popup-btn:hover {
-    background-color: #ce17a0;
-    color: white;
+
+body.dark-mode .chat-container::-webkit-scrollbar-thumb {
+  background-color: #555555;
 }
-body.dark-mode .input-area {
-    background-color: #161718;
-}
-body.dark-mode .input-area input {
-    background-color: #000000;
-    color: #ffffff;
-    border: 1px solid #000000;
+
+/* Smooth transition for theme toggle */
+* {
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
 }

@@ -179,11 +179,11 @@ body {
 
 /* Dark Mode */
 body.dark-mode .chat-title {
-    color: #000000; 
+    color: #ffffff; 
 }
 
 body:not(.dark-mode) .chat-title {
-    color: #ffffff;
+    color: #000000;
 }
 
 body.dark-mode {

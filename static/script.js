@@ -19,10 +19,23 @@ async function askBot() {
         });
 
         const data = await response.json();
-        appendMessage(data.reply, 'bot');  // 🔥 Corrected field
+        appendBotMessage(data.reply);  // Typing effect here!
     } catch (error) {
-        appendMessage("⚠️ Error connecting to server.", 'bot');
+        appendBotMessage("⚠️ Error connecting to server.");
     }
+}
+
+// Typing animation function
+function typeText(element, text, speed = 30) {
+    let index = 0;
+    function type() {
+        if (index < text.length) {
+            element.innerHTML += text.charAt(index);
+            index++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
 }
 
 function parseMarkdown(text) {
@@ -35,12 +48,26 @@ function parseMarkdown(text) {
     return text;
 }
 
+// Normal user message (instant add)
 function appendMessage(message, sender) {
     const chatBox = document.getElementById('chatBox');
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender}`;
     msgDiv.innerHTML = parseMarkdown(message);  
     chatBox.appendChild(msgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Bot message (animated typing add)
+function appendBotMessage(message) {
+    const chatBox = document.getElementById('chatBox');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message bot';
+    chatBox.appendChild(msgDiv);
+
+    const parsedText = parseMarkdown(message);
+    typeText(msgDiv, parsedText, 25);  // Adjust speed here (smaller = faster)
+    
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
@@ -60,6 +87,7 @@ themeToggle.addEventListener('click', () => {
         sendIcon.src = 'static/sendlight.png';
     }
 });
+
 /* Main Menu Button Functionality */
 const mainMenuBtn = document.getElementById('mainMenuBtn');
 const menuIcon = document.getElementById('menuIcon');
@@ -70,37 +98,33 @@ const closePopupBtn = document.getElementById('closePopupBtn');
 const chatBox = document.getElementById('chatBox');
 
 mainMenuBtn.addEventListener('click', () => {
-    // Show the popup when the menu button is clicked
     mainMenuPopup.style.display = 'block';
 });
 
 closePopupBtn.addEventListener('click', () => {
-    // Close the popup when the "Close" button is clicked
     mainMenuPopup.style.display = 'none';
 });
 
 newChatBtn.addEventListener('click', () => {
-    // Clear the chat history to start a new chat
     chatBox.innerHTML = '';
     mainMenuPopup.style.display = 'none';
 });
 
 continueChatBtn.addEventListener('click', () => {
-    // Close the popup and continue chatting
     mainMenuPopup.style.display = 'none';
 });
+
 function updateMenuIcon() {
     if (document.body.classList.contains('dark-mode')) {
-        menuIcon.src = 'static/Menudark.png'; // Menu dark image
+        menuIcon.src = 'static/Menudark.png';
     } else {
-        menuIcon.src = 'static/Menulight.png'; // Menu light image
+        menuIcon.src = 'static/Menulight.png';
     }
 }
 
-// Update the menu icon when theme is changed
-// Listen to changes on the body (optional better version)
+// Watch for theme changes and update menu icon
 const observer = new MutationObserver(updateMenuIcon);
 observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
-// Set correct menu icon on page load
+// Set correct menu icon on load
 updateMenuIcon();

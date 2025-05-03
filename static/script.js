@@ -106,13 +106,201 @@ function appendBotMessage(message) {
             index++;
             setTimeout(type, 15);
         } else {
-            msgDiv.innerHTML = parseMarkdown(escapeHtml(rawText));
+            msgDiv.innerHTML = formatCodeBlocks(parseMarkdown(escapeHtml(rawText)));
             addCopyButton(msgDiv); // Add copy button after typing finishes
             smartScrollToBottom(); // 
         }
     }
     type();
 }
+
+// Function to detect and format code blocks with syntax highlighting
+function formatCodeBlocks(text) {
+    // Regex to match markdown code blocks with optional language
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    
+    return text.replace(codeBlockRegex, function(match, language, code) {
+        // Default to 'text' if no language specified
+        language = language || 'text';
+        
+        // Create the code block HTML
+        return createCodeBlockHTML(code, language);
+    });
+}
+
+// Create HTML for a code block with syntax highlighting
+function createCodeBlockHTML(code, language) {
+    // Apply basic syntax highlighting based on language
+    const highlightedCode = applySyntaxHighlighting(code, language);
+    
+    // Create the code block container
+    return `
+    <div class="code-block">
+        <div class="code-header">
+            <span class="code-language">${language}</span>
+            <button class="code-copy-btn" onclick="copyCodeToClipboard(this)">Copy</button>
+        </div>
+        <pre class="code-content">${highlightedCode}</pre>
+    </div>
+    `;
+}
+
+// Apply syntax highlighting based on language
+function applySyntaxHighlighting(code, language) {
+    // Escape HTML to prevent XSS
+    let escapedCode = escapeHtml(code);
+    
+    // Apply different highlighting rules based on language
+    switch(language.toLowerCase()) {
+        case 'javascript':
+        case 'js':
+            escapedCode = highlightJavaScript(escapedCode);
+            break;
+        case 'html':
+            escapedCode = highlightHTML(escapedCode);
+            break;
+        case 'css':
+            escapedCode = highlightCSS(escapedCode);
+            break;
+        case 'python':
+        case 'py':
+            escapedCode = highlightPython(escapedCode);
+            break;
+        // Add more languages as needed
+    }
+    
+    return escapedCode;
+}
+
+// Highlight JavaScript syntax
+function highlightJavaScript(code) {
+    // Keywords
+    code = code.replace(/\b(const|let|var|function|return|if|else|for|while|class|import|export|from|try|catch|async|await|new|this)\b/g, '<span class="keyword">$1</span>');
+    
+    // Strings
+    code = code.replace(/(["'`])(.*?)\1/g, '<span class="string">$1$2$1</span>');
+    
+    // Comments
+    code = code.replace(/\/\/(.*)/g, '<span class="comment">//$1</span>');
+    code = code.replace(/\/\*([\s\S]*?)\*\//g, '<span class="comment">/*$1*/</span>');
+    
+    // Functions
+    code = code.replace(/(\w+)(\s*\()/g, '<span class="function">$1</span>$2');
+    
+    // Numbers
+    code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    
+    // Operators
+    code = code.replace(/([=+\-*/%&|^<>!?:]+)/g, '<span class="operator">$1</span>');
+    
+    return code;
+}
+
+// Highlight HTML syntax
+function highlightHTML(code) {
+    // Tags
+    code = code.replace(/(&lt;[\/]?\w+)(\s|&gt;)/g, '<span class="tag">$1</span>$2');
+    code = code.replace(/(&lt;\/?\w+)(\s|&gt;)/g, '<span class="tag">$1</span>$2');
+    
+    // Attributes
+    code = code.replace(/(\s)(\w+)(=)/g, '$1<span class="attribute">$2</span>$3');
+    
+    // Strings
+    code = code.replace(/(["'])(.*?)\1/g, '<span class="string">$1$2$1</span>');
+    
+    // Closing tags
+    code = code.replace(/(&gt;)/g, '<span class="tag">$1</span>');
+    
+    return code;
+}
+
+// Highlight CSS syntax
+function highlightCSS(code) {
+    // Selectors
+    code = code.replace(/([.#]\w+|\w+)(\s*\{)/g, '<span class="tag">$1</span>$2');
+    
+    // Properties
+    code = code.replace(/(\s+)(\w+-?\w+)(\s*:)/g, '$1<span class="attribute">$2</span>$3');
+    
+    // Values
+    code = code.replace(/(:)(\s*)([\w#]+)/g, '$1$2<span class="string">$3</span>');
+    
+    // Units
+    code = code.replace(/(\d+)(px|em|rem|%|vh|vw)/g, '<span class="number">$1</span><span class="keyword">$2</span>');
+    
+    // Comments
+    code = code.replace(/\/\*([\s\S]*?)\*\//g, '<span class="comment">/*$1*/</span>');
+    
+    return code;
+}
+
+// Highlight Python syntax
+function highlightPython(code) {
+    // Keywords
+    code = code.replace(/\b(def|class|import|from|as|return|if|elif|else|for|while|try|except|finally|with|in|is|not|and|or|True|False|None)\b/g, '<span class="keyword">$1</span>');
+    
+    // Strings
+    code = code.replace(/(["'])(.*?)\1/g, '<span class="string">$1$2$1</span>');
+    code = code.replace(/(["'])([^"']*?)\1/g, '<span class="string">$1$2$1</span>');
+    
+    // Comments
+    code = code.replace(/#(.*)/g, '<span class="comment">#$1</span>');
+    
+    // Functions
+    code = code.replace(/(\w+)(\s*\()/g, '<span class="function">$1</span>$2');
+    
+    // Numbers
+    code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    
+    return code;
+}
+
+// Function to copy code to clipboard
+function copyCodeToClipboard(button) {
+    const codeBlock = button.closest('.code-block');
+    const codeContent = codeBlock.querySelector('.code-content');
+    
+    // Create a temporary textarea to copy the text
+    const textarea = document.createElement('textarea');
+    // Get the text content without HTML tags
+    textarea.value = codeContent.textContent;
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+        // Copy the text
+        document.execCommand('copy');
+        
+        // Visual feedback
+        button.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        // Reset after 2 seconds
+        setTimeout(() => {
+            button.textContent = 'Copy';
+            button.classList.remove('copied');
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy code: ', err);
+    } finally {
+        document.body.removeChild(textarea);
+    }
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Add the copyCodeToClipboard function to the window object
+window.copyCodeToClipboard = copyCodeToClipboard;
 
 /* Theme Toggle */
 const themeToggle = document.getElementById('themeToggle');

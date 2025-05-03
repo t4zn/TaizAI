@@ -217,6 +217,7 @@ let microphone;
 let dataArray;
 let animationFrameId;
 let finalTranscript = "";
+let mediaStream = null;
 const micBtn = document.getElementById('micBtn');
 const voiceWaveContainer = document.getElementById('voiceWaveContainer');
 const bars = document.querySelectorAll('.bar');
@@ -239,6 +240,42 @@ function initSpeechRecognition() {
     recognition.interimResults = false; // Only get final results to avoid repetition
     recognition.maxAlternatives = 1;
     recognition.lang = 'en-US';
+}
+
+// Initialize Audio Context for waveform visualization
+function initAudioContext() {
+    try {
+        // Create audio context
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Create analyser node
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.7; // Smoother transitions
+        
+        // Get microphone access
+        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            .then(stream => {
+                // Store the stream for later cleanup
+                mediaStream = stream;
+                
+                // Connect microphone to analyser
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                
+                // Create data array for frequency analysis
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                
+                // Start visualizing
+                visualizeAudio();
+            })
+            .catch(err => {
+                console.error('Error accessing microphone:', err);
+                stopRecording();
+            });
+    } catch (err) {
+        console.error('Error initializing audio context:', err);
+    }
 }
 
 // Start recording
@@ -355,6 +392,7 @@ function stopRecording() {
     // Stop audio visualization
     if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
     }
     
     // Disconnect microphone if connected
@@ -363,41 +401,26 @@ function stopRecording() {
         microphone = null;
     }
     
+    // Close audio context
+    if (audioContext) {
+        try {
+            audioContext.close();
+            audioContext = null;
+        } catch (e) {
+            console.error('Error closing audio context:', e);
+        }
+    }
+    
+    // Stop all tracks in the media stream to release microphone
+    if (mediaStream) {
+        mediaStream.getTracks().forEach(track => {
+            track.stop();
+        });
+        mediaStream = null;
+    }
+    
     // Reset microphone button appearance
     micBtn.classList.remove('active');
-}
-
-// Initialize Audio Context for waveform visualization
-function initAudioContext() {
-    try {
-        // Create audio context
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Create analyser node
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256;
-        analyser.smoothingTimeConstant = 0.7; // Smoother transitions
-        
-        // Get microphone access
-        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then(stream => {
-                // Connect microphone to analyser
-                microphone = audioContext.createMediaStreamSource(stream);
-                microphone.connect(analyser);
-                
-                // Create data array for frequency analysis
-                dataArray = new Uint8Array(analyser.frequencyBinCount);
-                
-                // Start visualizing
-                visualizeAudio();
-            })
-            .catch(err => {
-                console.error('Error accessing microphone:', err);
-                stopRecording();
-            });
-    } catch (err) {
-        console.error('Error initializing audio context:', err);
-    }
 }
 
 // Visualize audio data

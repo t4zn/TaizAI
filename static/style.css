@@ -90,6 +90,12 @@ body.dark-mode .footer {
     font-size: 4vw;
     color: #000;
     outline: none;
+    resize: none; /* Prevent manual resizing */
+    overflow-y: auto; /* Add scrollbar when needed */
+    min-height: 6vw; /* Minimum height */
+    max-height: 20vw; /* Maximum height before scrolling */
+    line-height: 1.4; /* Better line spacing */
+    font-family: inherit; /* Use the same font as the rest of the app */
 }
 
 body.dark-mode #userInput {
@@ -127,12 +133,12 @@ body.dark-mode #userInput {
 
 /* Light mode colors */
 .footer .bar {
-    background-color: #3b82f6; /* Blue in light mode */
+    background-color: #000000; /* Black in light mode */
 }
 
 /* Dark mode colors */
 body.dark-mode .footer .bar {
-    background-color: #ce17a0; /* Pink in dark mode */
+    background-color: #ffffff; /* White in dark mode */
 }
 
 /* Microphone Button Styles */

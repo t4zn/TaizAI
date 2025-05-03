@@ -94,26 +94,58 @@ const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
 const sendIcon = document.getElementById('sendIcon');
 
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    updateThemeIcons();
-});
-
-function updateThemeIcons() {
-    if (document.body.classList.contains('dark-mode')) {
-        themeIcon.src = 'static/Moon.png';
-        sendIcon.src = 'static/senddark.png';
-        menuIcon.src = 'static/Menudark.png';
-    } else {
-        themeIcon.src = 'static/Sun.png';
-        sendIcon.src = 'static/sendlight.png';
-        menuIcon.src = 'static/Menulight.png';
+// Initialize speech recognition when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize speech recognition
+    initSpeechRecognition();
+    
+    // Event listeners for microphone button
+    if (micBtn) {
+        micBtn.addEventListener('click', function() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
     }
-}
+    
+    // Theme toggle functionality
+    const menuIcon = document.getElementById('menuIcon');
+    
+    themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        
+        // Update theme icon
+        if (document.body.classList.contains('dark-mode')) {
+            themeIcon.src = 'static/Moon.png';
+            // Update menu icon for dark mode
+            if (menuIcon) menuIcon.src = 'static/Menudark.png';
+            // Update send icon for dark mode
+            if (sendIcon) sendIcon.src = 'static/senddark.png';
+        } else {
+            themeIcon.src = 'static/Sun.png';
+            // Update menu icon for light mode
+            if (menuIcon) menuIcon.src = 'static/Menulight.png';
+            // Update send icon for light mode
+            if (sendIcon) sendIcon.src = 'static/sendlight.png';
+        }
+    });
+    
+    // Check initial theme state and set icons accordingly
+    if (document.body.classList.contains('dark-mode')) {
+        if (themeIcon) themeIcon.src = 'static/Moon.png';
+        if (menuIcon) menuIcon.src = 'static/Menudark.png';
+        if (sendIcon) sendIcon.src = 'static/senddark.png';
+    } else {
+        if (themeIcon) themeIcon.src = 'static/Sun.png';
+        if (menuIcon) menuIcon.src = 'static/Menulight.png';
+        if (sendIcon) sendIcon.src = 'static/sendlight.png';
+    }
+});
 
 /* Main Menu Button */
 const mainMenuBtn = document.getElementById('mainMenuBtn');
-const menuIcon = document.getElementById('menuIcon');
 const mainMenuPopup = document.getElementById('mainMenuPopup');
 const newChatBtn = document.getElementById('newChatBtn');
 const continueChatBtn = document.getElementById('continueChatBtn');
@@ -404,20 +436,3 @@ function visualizeAudio() {
     // Continue animation
     animationFrameId = requestAnimationFrame(visualizeAudio);
 }
-
-// Initialize speech recognition when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize speech recognition
-    initSpeechRecognition();
-    
-    // Event listeners for microphone button
-    if (micBtn) {
-        micBtn.addEventListener('click', function() {
-            if (isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-        });
-    }
-});

@@ -1,17 +1,42 @@
 // Send button + Enter key trigger
 document.getElementById('sendBtn').addEventListener('click', askBot);
-document.getElementById('userInput').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') askBot();
+document.getElementById('userInput').addEventListener('keydown', function(e) {
+    // Auto-resize the textarea based on content
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+    
+    // Send message on Ctrl+Enter or Shift+Enter
+    if (e.key === 'Enter' && (e.ctrlKey || e.shiftKey)) {
+        e.preventDefault();
+        askBot();
+    }
+    // Add a new line on plain Enter
+    else if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+        // Let the default behavior happen (new line)
+    }
+});
+
+document.getElementById('userInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
 });
 
 // Send user message + get bot reply
 async function askBot() {
+    // If recording is active, stop it first
+    if (isRecording) {
+        stopRecording();
+    }
+    
     const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
     if (!userText) return;
 
     appendMessage(userText, 'user');
     inputField.value = '';
+    
+    // Reset textarea height
+    inputField.style.height = 'auto';
 
     try {
         const response = await fetch('/api/ask', {

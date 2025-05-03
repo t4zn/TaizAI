@@ -140,7 +140,7 @@ body.dark-mode .footer .bar {
     padding: 0;
     border: none;
     background-color: transparent;
-    color: #3b82f6;
+    color: #000000; /* Black in light mode */
     cursor: pointer;
     transition: all 0.3s ease;
     margin-right: 5px;
@@ -167,7 +167,7 @@ body.dark-mode .footer .bar {
 }
 
 body.dark-mode .mic-btn {
-    color: #ce17a0;
+    color: #ffffff; /* White in dark mode */
 }
 
 body.dark-mode .mic-btn:hover {

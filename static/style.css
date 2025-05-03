@@ -190,23 +190,31 @@ body.dark-mode .mic-btn.active {
     100% { transform: scale(1); }
 }
 
-/* Send button */
+/* Send Button */
 #sendBtn {
-    background: none;
+    background-color: #000000;
     border: none;
-    cursor: pointer;
-    margin-left: 5px;
-    padding: 8px;
+    width: 12vw;
+    height: 12vw;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s;
 }
 
+
 .send-icon {
-    width: 24px;
-    height: 24px;
-    transition: transform 0.2s;
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
 }
+
 
 #sendBtn:hover .send-icon {
     transform: scale(1.1);

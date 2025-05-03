@@ -68,23 +68,22 @@ html, body {
 .footer {
     display: flex;
     align-items: center;
-    padding: 0;
-    margin: 0;
-    background-color: white;
-    border-top: 1px solid #e2e8f0;
+    padding: 2vw 3vw;
+    background-color: #ffffff;
+    border-top: 1px solid #e0e0e0;
     flex-shrink: 0; /* important: no shrinking */
 }
 
 /* Dark mode footer */
 body.dark-mode .footer {
-    background-color: #1e1e1e;
-    border-top: 1px solid #333;
+    background-color: #000000;
+    border-top: 1px solid #333333;
 }
 
 /* Input field */
 #userInput {
     flex: 1;
-    padding: 10px;
+    padding: 3vw 4vw;
     border: none;
     border-radius: 50px;
     background-color: #f9f9f9;
@@ -98,52 +97,118 @@ body.dark-mode #userInput {
     color: #fff;
 }
 
-/* Send Button */
-#sendBtn {
-    background-color: #000000;
-    border: none;
-    width: 12vw;
-    height: 12vw;
-    border-radius: 50%;
-    display: flex;
+/* Voice Wave Animation Container - Inline version */
+.voice-wave-container {
+    display: none;
+    position: relative;
+    height: 30px;
+    width: 60px;
+    margin-right: 5px;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: background-color 0.3s;
 }
 
-/* Send Button Styles */
-.send-btn {
-    padding: 10px;
+.wave-bars {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 30px;
+    width: 60px;
+}
+
+.bar {
+    background-color: currentColor;
+    width: 3px;
+    height: 3px;
+    margin: 0 2px;
+    border-radius: 3px;
+    transition: height 0.1s ease;
+}
+
+/* Light mode colors */
+.footer .bar {
+    background-color: #3b82f6; /* Blue in light mode */
+}
+
+/* Dark mode colors */
+body.dark-mode .footer .bar {
+    background-color: #ce17a0; /* Pink in dark mode */
+}
+
+/* Microphone Button Styles */
+.mic-btn {
+    padding: 8px;
     border: none;
     background-color: transparent;
+    color: #3b82f6;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-right: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    width: auto;
-    height: auto;
 }
 
-.send-btn:hover {
+.mic-btn:hover {
     background-color: rgba(59, 130, 246, 0.1);
 }
 
-body.dark-mode .send-btn:hover {
+.mic-btn.active {
+    color: #f44336; /* Red when active in light mode */
+}
+
+body.dark-mode .mic-btn {
+    color: #ce17a0;
+}
+
+body.dark-mode .mic-btn:hover {
     background-color: rgba(206, 23, 160, 0.1);
 }
 
-.send-icon {
-    width: 28px;
-    height: 28px;
+body.dark-mode .mic-btn.active {
+    color: #ff4081; /* Pink when active in dark mode */
+}
+
+/* SVG Microphone Icon */
+.mic-icon {
+    width: 24px;
+    height: 24px;
     transition: transform 0.3s ease;
 }
 
-.send-btn:hover .send-icon {
+.mic-btn:hover .mic-icon {
+    transform: scale(1.1);
+}
+
+.mic-btn.active .mic-icon {
+    animation: mic-pulse 1.5s infinite;
+}
+
+@keyframes mic-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Send button */
+#sendBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-icon {
+    width: 7vw;
+    height: 7vw;
+    transition: transform 0.2s;
+}
+
+#sendBtn:hover .send-icon {
     transform: scale(1.1);
 }
 
@@ -325,126 +390,4 @@ body.dark-mode .input-area input {
     background-color: #000000;
     color: #ffffff;
     border: 1px solid #000000;
-}
-
-/* Voice Wave Animation Container - Inline version */
-.voice-wave-container {
-    display: none;
-    position: relative;
-    height: 30px;
-    width: 60px;
-    margin-right: 5px;
-    align-items: center;
-    justify-content: center;
-}
-
-.wave-bars {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 30px;
-    width: 60px;
-}
-
-.bar {
-    background-color: currentColor;
-    width: 3px;
-    height: 3px;
-    margin: 0 2px;
-    border-radius: 3px;
-    transition: height 0.1s ease;
-}
-
-/* Light mode colors */
-.input-area .bar {
-    background-color: #3b82f6; /* Blue in light mode */
-}
-
-/* Dark mode colors */
-body.dark-mode .input-area .bar {
-    background-color: #ce17a0; /* Pink in dark mode */
-}
-
-/* Microphone Button Styles */
-.mic-btn {
-    padding: 10px;
-    border: none;
-    background-color: transparent;
-    color: #3b82f6;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-right: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    width: 12vw;
-    height: 12vw;
-}
-
-.mic-btn:hover {
-    background-color: rgba(59, 130, 246, 0.1);
-}
-
-.mic-btn.active {
-    color: #f44336; /* Red when active in light mode */
-}
-
-body.dark-mode .mic-btn {
-    color: #ce17a0;
-}
-
-body.dark-mode .mic-btn:hover {
-    background-color: rgba(206, 23, 160, 0.1);
-}
-
-body.dark-mode .mic-btn.active {
-    color: #ff4081; /* Pink when active in dark mode */
-}
-
-/* SVG Microphone Icon */
-.mic-icon {
-    width: 28px;
-    height: 28px;
-    transition: transform 0.3s ease;
-}
-
-.mic-btn:hover .mic-icon {
-    transform: scale(1.1);
-}
-
-.mic-btn.active .mic-icon {
-    animation: mic-pulse 1.5s infinite;
-}
-
-@keyframes mic-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-/* Input area adjustments for voice input */
-.input-area {
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    background-color: #e2e8f0;
-    border: none;
-    margin: 0;
-    transition: all 0.3s ease;
-}
-
-body.dark-mode .input-area {
-    background-color: #161718;
-    border: none;
-}
-
-.input-area input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 16px;
-    color: inherit;
-    padding: 10px;
 }

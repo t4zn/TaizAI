@@ -130,6 +130,9 @@ function formatCodeBlocks(text) {
 
 // Create HTML for a code block with syntax highlighting
 function createCodeBlockHTML(code, language) {
+    // Decode HTML entities in the code before highlighting
+    code = decodeHtmlEntities(code);
+    
     // Apply basic syntax highlighting based on language
     const highlightedCode = applySyntaxHighlighting(code, language);
     
@@ -143,6 +146,13 @@ function createCodeBlockHTML(code, language) {
         <pre class="code-content">${highlightedCode}</pre>
     </div>
     `;
+}
+
+// Decode HTML entities to restore special characters
+function decodeHtmlEntities(text) {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
 }
 
 // Apply syntax highlighting based on language
@@ -165,6 +175,10 @@ function applySyntaxHighlighting(code, language) {
         case 'python':
         case 'py':
             escapedCode = highlightPython(escapedCode);
+            break;
+        case 'c':
+        case 'cpp':
+            escapedCode = highlightC(escapedCode);
             break;
         // Add more languages as needed
     }
@@ -251,6 +265,33 @@ function highlightPython(code) {
     
     // Numbers
     code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    
+    return code;
+}
+
+// Highlight C/C++ syntax
+function highlightC(code) {
+    // Keywords
+    code = code.replace(/\b(int|char|float|double|void|struct|enum|typedef|const|static|return|if|else|for|while|do|switch|case|break|continue|sizeof|include|define|main)\b/g, '<span class="keyword">$1</span>');
+    
+    // Preprocessor directives
+    code = code.replace(/(\#\w+)/g, '<span class="keyword">$1</span>');
+    
+    // Strings
+    code = code.replace(/(["'])(.*?)\1/g, '<span class="string">$1$2$1</span>');
+    
+    // Comments
+    code = code.replace(/\/\/(.*)/g, '<span class="comment">//$1</span>');
+    code = code.replace(/\/\*([\s\S]*?)\*\//g, '<span class="comment">/*$1*/</span>');
+    
+    // Functions
+    code = code.replace(/(\w+)(\s*\()/g, '<span class="function">$1</span>$2');
+    
+    // Numbers
+    code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    
+    // Operators
+    code = code.replace(/([=+\-*/%&|^<>!?:]+)/g, '<span class="operator">$1</span>');
     
     return code;
 }

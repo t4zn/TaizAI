@@ -34,30 +34,28 @@
 
         <!-- Footer with input and send button -->
         <footer class="footer">
-            <div class="input-area">
-                <input type="text" id="userInput" placeholder="Type your question here..." autofocus/>
-                <!-- Inline voice wave container -->
-                <div id="voiceWaveContainer" class="voice-wave-container">
-                    <div class="wave-bars">
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                    </div>
+            <input type="text" id="userInput" placeholder="Ask anything..." autocomplete="off" autofocus>
+            <!-- Inline voice wave container -->
+            <div id="voiceWaveContainer" class="voice-wave-container">
+                <div class="wave-bars">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
                 </div>
-                <button id="micBtn" class="mic-btn" aria-label="Voice input" title="Click to speak">
-                    <svg class="mic-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M19 11V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 19V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M8 22H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-                <button id="sendBtn" class="send-btn">
-                    <img src="static/sendlight.png" alt="Send" class="send-icon" id="sendIcon">
-                </button>
             </div>
+            <button id="micBtn" class="mic-btn" aria-label="Voice input" title="Click to speak">
+                <svg class="mic-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19 11V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 19V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 22H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button id="sendBtn">
+                <img src="static/sendlight.png" alt="Send" class="send-icon" id="sendIcon">
+            </button>
         </footer>
     </div>
 

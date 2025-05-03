@@ -140,7 +140,7 @@ function createCodeBlockHTML(code, language) {
     return `
     <div class="code-block">
         <div class="code-header">
-            <span class="code-language">${language}</span>
+            <span class="code-language">${language.toUpperCase()}</span>
             <button class="code-copy-btn" onclick="copyCodeToClipboard(this)">Copy</button>
         </div>
         <pre class="code-content">${highlightedCode}</pre>
@@ -157,7 +157,7 @@ function decodeHtmlEntities(text) {
 
 // Apply syntax highlighting based on language
 function applySyntaxHighlighting(code, language) {
-    // Escape HTML to prevent XSS
+    // First escape HTML to prevent XSS
     let escapedCode = escapeHtml(code);
     
     // Apply different highlighting rules based on language
@@ -186,114 +186,138 @@ function applySyntaxHighlighting(code, language) {
     return escapedCode;
 }
 
-// Highlight JavaScript syntax
+// Highlight JavaScript syntax with improved regex
 function highlightJavaScript(code) {
-    // Keywords
-    code = code.replace(/\b(const|let|var|function|return|if|else|for|while|class|import|export|from|try|catch|async|await|new|this)\b/g, '<span class="keyword">$1</span>');
+    // Create a safe copy to work with
+    let highlighted = code;
     
-    // Strings
-    code = code.replace(/(["'`])(.*?)\1/g, '<span class="string">$1$2$1</span>');
+    // Keywords - use word boundaries to avoid partial matches
+    const keywords = ['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'class', 'import', 'export', 'from', 'try', 'catch', 'async', 'await', 'new', 'this'];
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'g');
+        highlighted = highlighted.replace(regex, '<span class="keyword">$1</span>');
+    });
     
-    // Comments
-    code = code.replace(/\/\/(.*)/g, '<span class="comment">//$1</span>');
-    code = code.replace(/\/\*([\s\S]*?)\*\//g, '<span class="comment">/*$1*/</span>');
+    // Process strings - handle quotes carefully
+    highlighted = highlighted.replace(/("(?:\\.|[^"\\])*")|('(?:\\.|[^'\\])*')|(`(?:\\.|[^`\\])*`)/g, match => {
+        return `<span class="string">${match}</span>`;
+    });
     
-    // Functions
-    code = code.replace(/(\w+)(\s*\()/g, '<span class="function">$1</span>$2');
+    // Comments - single line
+    highlighted = highlighted.replace(/(\/\/[^\n]*)/g, '<span class="comment">$1</span>');
+    
+    // Comments - multi line (non-greedy match)
+    highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="comment">$1</span>');
+    
+    // Functions - only match function names
+    highlighted = highlighted.replace(/\b(\w+)(?=\s*\()/g, '<span class="function">$1</span>');
     
     // Numbers
-    code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    highlighted = highlighted.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="number">$1</span>');
     
-    // Operators
-    code = code.replace(/([=+\-*/%&|^<>!?:]+)/g, '<span class="operator">$1</span>');
-    
-    return code;
+    return highlighted;
 }
 
-// Highlight HTML syntax
+// Highlight HTML syntax with improved regex
 function highlightHTML(code) {
-    // Tags
-    code = code.replace(/(&lt;[\/]?\w+)(\s|&gt;)/g, '<span class="tag">$1</span>$2');
-    code = code.replace(/(&lt;\/?\w+)(\s|&gt;)/g, '<span class="tag">$1</span>$2');
+    // Create a safe copy to work with
+    let highlighted = code;
+    
+    // Tags - opening and closing
+    highlighted = highlighted.replace(/(&lt;\/?)([\w-]+)(?=[^&]*&gt;)/g, '$1<span class="tag">$2</span>');
     
     // Attributes
-    code = code.replace(/(\s)(\w+)(=)/g, '$1<span class="attribute">$2</span>$3');
+    highlighted = highlighted.replace(/\s([\w-]+)(?==)/g, ' <span class="attribute">$1</span>');
     
-    // Strings
-    code = code.replace(/(["'])(.*?)\1/g, '<span class="string">$1$2$1</span>');
+    // Attribute values
+    highlighted = highlighted.replace(/(=)(".*?"|'.*?')/g, '$1<span class="string">$2</span>');
     
-    // Closing tags
-    code = code.replace(/(&gt;)/g, '<span class="tag">$1</span>');
-    
-    return code;
+    return highlighted;
 }
 
-// Highlight CSS syntax
+// Highlight CSS syntax with improved regex
 function highlightCSS(code) {
+    // Create a safe copy to work with
+    let highlighted = code;
+    
     // Selectors
-    code = code.replace(/([.#]\w+|\w+)(\s*\{)/g, '<span class="tag">$1</span>$2');
+    highlighted = highlighted.replace(/([\.\#]?[\w-]+)(?=\s*\{)/g, '<span class="tag">$1</span>');
     
     // Properties
-    code = code.replace(/(\s+)(\w+-?\w+)(\s*:)/g, '$1<span class="attribute">$2</span>$3');
+    highlighted = highlighted.replace(/\s([\w-]+)(?=\s*:)/g, ' <span class="attribute">$1</span>');
     
-    // Values
-    code = code.replace(/(:)(\s*)([\w#]+)/g, '$1$2<span class="string">$3</span>');
+    // Values - including colors
+    highlighted = highlighted.replace(/:\s*([\w-]+|#[a-fA-F0-9]+)/g, ': <span class="string">$1</span>');
     
     // Units
-    code = code.replace(/(\d+)(px|em|rem|%|vh|vw)/g, '<span class="number">$1</span><span class="keyword">$2</span>');
+    highlighted = highlighted.replace(/(\d+)(px|em|rem|%|vh|vw)/g, '<span class="number">$1</span><span class="keyword">$2</span>');
     
     // Comments
-    code = code.replace(/\/\*([\s\S]*?)\*\//g, '<span class="comment">/*$1*/</span>');
+    highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="comment">$1</span>');
     
-    return code;
+    return highlighted;
 }
 
-// Highlight Python syntax
+// Highlight Python syntax with improved regex
 function highlightPython(code) {
-    // Keywords
-    code = code.replace(/\b(def|class|import|from|as|return|if|elif|else|for|while|try|except|finally|with|in|is|not|and|or|True|False|None)\b/g, '<span class="keyword">$1</span>');
+    // Create a safe copy to work with
+    let highlighted = code;
     
-    // Strings
-    code = code.replace(/(["'])(.*?)\1/g, '<span class="string">$1$2$1</span>');
-    code = code.replace(/(["'])([^"']*?)\1/g, '<span class="string">$1$2$1</span>');
+    // Keywords
+    const keywords = ['def', 'class', 'import', 'from', 'as', 'return', 'if', 'elif', 'else', 'for', 'while', 'try', 'except', 'finally', 'with', 'in', 'is', 'not', 'and', 'or', 'True', 'False', 'None'];
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'g');
+        highlighted = highlighted.replace(regex, '<span class="keyword">$1</span>');
+    });
+    
+    // Strings - single and double quotes
+    highlighted = highlighted.replace(/("(?:\\.|[^"\\])*")|('(?:\\.|[^'\\])*')/g, match => {
+        return `<span class="string">${match}</span>`;
+    });
     
     // Comments
-    code = code.replace(/#(.*)/g, '<span class="comment">#$1</span>');
+    highlighted = highlighted.replace(/(#[^\n]*)/g, '<span class="comment">$1</span>');
     
     // Functions
-    code = code.replace(/(\w+)(\s*\()/g, '<span class="function">$1</span>$2');
+    highlighted = highlighted.replace(/\b(\w+)(?=\s*\()/g, '<span class="function">$1</span>');
     
     // Numbers
-    code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    highlighted = highlighted.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="number">$1</span>');
     
-    return code;
+    return highlighted;
 }
 
-// Highlight C/C++ syntax
+// Highlight C/C++ syntax with improved regex
 function highlightC(code) {
+    // Create a safe copy to work with
+    let highlighted = code;
+    
     // Keywords
-    code = code.replace(/\b(int|char|float|double|void|struct|enum|typedef|const|static|return|if|else|for|while|do|switch|case|break|continue|sizeof|include|define|main)\b/g, '<span class="keyword">$1</span>');
+    const keywords = ['int', 'char', 'float', 'double', 'void', 'struct', 'enum', 'typedef', 'const', 'static', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'sizeof', 'include', 'define', 'main'];
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'g');
+        highlighted = highlighted.replace(regex, '<span class="keyword">$1</span>');
+    });
     
     // Preprocessor directives
-    code = code.replace(/(\#\w+)/g, '<span class="keyword">$1</span>');
+    highlighted = highlighted.replace(/(#\w+)/g, '<span class="keyword">$1</span>');
     
     // Strings
-    code = code.replace(/(["'])(.*?)\1/g, '<span class="string">$1$2$1</span>');
+    highlighted = highlighted.replace(/("(?:\\.|[^"\\])*")/g, '<span class="string">$1</span>');
     
-    // Comments
-    code = code.replace(/\/\/(.*)/g, '<span class="comment">//$1</span>');
-    code = code.replace(/\/\*([\s\S]*?)\*\//g, '<span class="comment">/*$1*/</span>');
+    // Comments - single line
+    highlighted = highlighted.replace(/(\/\/[^\n]*)/g, '<span class="comment">$1</span>');
+    
+    // Comments - multi line
+    highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="comment">$1</span>');
     
     // Functions
-    code = code.replace(/(\w+)(\s*\()/g, '<span class="function">$1</span>$2');
+    highlighted = highlighted.replace(/\b(\w+)(?=\s*\()/g, '<span class="function">$1</span>');
     
     // Numbers
-    code = code.replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+    highlighted = highlighted.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="number">$1</span>');
     
-    // Operators
-    code = code.replace(/([=+\-*/%&|^<>!?:]+)/g, '<span class="operator">$1</span>');
-    
-    return code;
+    return highlighted;
 }
 
 // Function to copy code to clipboard

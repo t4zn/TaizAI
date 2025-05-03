@@ -184,12 +184,13 @@ function highlightCode(code, language) {
         case 'c':
         case 'cpp':
             return highlightSyntax(escapedCode, {
-                keywords: ['int', 'char', 'float', 'double', 'void', 'struct', 'enum', 'typedef', 'const', 'static', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'sizeof', 'include', 'define', 'main'],
+                keywords: ['int', 'char', 'float', 'double', 'void', 'struct', 'enum', 'typedef', 'const', 'static', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'sizeof', 'using', 'namespace', 'class', 'public', 'private', 'protected', 'template', 'typename', 'virtual', 'friend', 'operator', 'new', 'delete'],
                 preprocessor: /#\w+/g,
                 stringPattern: /("(?:\\.|[^"\\])*")/g,
                 commentPatterns: [/\/\/[^\n]*/g, /\/\*[\s\S]*?\*\//g],
                 functionPattern: /\b(\w+)(?=\s*\()/g,
-                numberPattern: /\b(\d+(?:\.\d+)?)\b/g
+                numberPattern: /\b(\d+(?:\.\d+)?)\b/g,
+                includePattern: /#include\s*(?:<([^>]+)>|"([^"]+)")/g
             });
         default:
             return escapedCode;
@@ -207,6 +208,39 @@ function highlightSyntax(code, options) {
     
     // Array to store all the spans we'll create
     const spans = [];
+    
+    // Special handling for C/C++ includes
+    if (options.includePattern) {
+        let match;
+        while ((match = options.includePattern.exec(codeText)) !== null) {
+            // First mark the entire #include statement
+            spans.push({
+                start: match.index,
+                end: match.index + match[0].length,
+                class: 'preprocessor',
+                text: match[0]
+            });
+            
+            // Then mark the header name specifically
+            if (match[1]) { // <header> style
+                const headerStart = match.index + match[0].indexOf('<');
+                spans.push({
+                    start: headerStart,
+                    end: headerStart + match[1].length + 2, // +2 for < and >
+                    class: 'string',
+                    text: `<${match[1]}>`
+                });
+            } else if (match[2]) { // "header" style
+                const headerStart = match.index + match[0].indexOf('"');
+                spans.push({
+                    start: headerStart,
+                    end: headerStart + match[2].length + 2, // +2 for quotes
+                    class: 'string',
+                    text: `"${match[2]}"`
+                });
+            }
+        }
+    }
     
     // Process keywords
     if (options.keywords) {
@@ -228,6 +262,11 @@ function highlightSyntax(code, options) {
     if (options.preprocessor) {
         let match;
         while ((match = options.preprocessor.exec(codeText)) !== null) {
+            // Skip if this is part of an #include that we've already processed
+            if (options.includePattern && codeText.substring(match.index, match.index + 9) === '#include') {
+                continue;
+            }
+            
             spans.push({
                 start: match.index,
                 end: match.index + match[0].length,
@@ -360,43 +399,25 @@ function copyCodeToClipboard(button) {
     const codeBlock = button.closest('.code-block');
     const codeContent = codeBlock.querySelector('.code-content');
     
-    // Create a temporary textarea to copy the text
+    // Create a temporary textarea to copy from
     const textarea = document.createElement('textarea');
-    // Get the text content without HTML tags
-    textarea.value = codeContent.textContent;
+    
+    // Get the text content (without the HTML tags)
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = codeContent.innerHTML;
+    textarea.value = tempDiv.textContent;
+    
     document.body.appendChild(textarea);
     textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
     
-    try {
-        // Copy the text
-        document.execCommand('copy');
-        
-        // Visual feedback
-        button.textContent = 'Copied!';
-        button.classList.add('copied');
-        
-        // Reset after 2 seconds
-        setTimeout(() => {
-            button.textContent = 'Copy';
-            button.classList.remove('copied');
-        }, 2000);
-    } catch (err) {
-        console.error('Failed to copy code: ', err);
-    } finally {
-        document.body.removeChild(textarea);
-    }
-}
-
-// Escape HTML to prevent XSS
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    // Show copied feedback
+    const originalText = button.textContent;
+    button.textContent = 'Copied!';
+    setTimeout(() => {
+        button.textContent = originalText;
+    }, 2000);
 }
 
 // Add the copyCodeToClipboard function to the window object

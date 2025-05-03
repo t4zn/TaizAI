@@ -415,3 +415,135 @@ body.dark-mode .input-area input {
     color: #ffffff;
     border: 1px solid #000000;
 }
+
+/* Code Block Styling */
+.code-block {
+    position: relative;
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    font-size: 12px;
+    border-bottom: 1px solid #444;
+}
+
+body.dark-mode .code-header {
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #333;
+}
+
+.code-language {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.code-copy-btn {
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    cursor: pointer;
+    padding: 2px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.code-copy-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.code-copy-btn.copied {
+    color: #4caf50;
+}
+
+.code-content {
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 15px;
+    overflow-x: auto;
+    white-space: pre;
+    text-align: left;
+}
+
+body.dark-mode .code-content {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+}
+
+/* Syntax Highlighting */
+.code-content .keyword {
+    color: #c678dd; /* purple */
+}
+
+.code-content .string {
+    color: #98c379; /* green */
+}
+
+.code-content .comment {
+    color: #5c6370; /* gray */
+    font-style: italic;
+}
+
+.code-content .function {
+    color: #61afef; /* blue */
+}
+
+.code-content .number {
+    color: #d19a66; /* orange */
+}
+
+.code-content .operator {
+    color: #56b6c2; /* cyan */
+}
+
+.code-content .tag {
+    color: #e06c75; /* red */
+}
+
+.code-content .attribute {
+    color: #d19a66; /* orange */
+}
+
+/* Dark Mode Syntax Highlighting */
+body.dark-mode .code-content .keyword {
+    color: #c586c0; /* pink */
+}
+
+body.dark-mode .code-content .string {
+    color: #ce9178; /* orange-red */
+}
+
+body.dark-mode .code-content .comment {
+    color: #6a9955; /* green */
+}
+
+body.dark-mode .code-content .function {
+    color: #dcdcaa; /* yellow */
+}
+
+body.dark-mode .code-content .number {
+    color: #b5cea8; /* light green */
+}
+
+body.dark-mode .code-content .operator {
+    color: #569cd6; /* blue */
+}
+
+body.dark-mode .code-content .tag {
+    color: #f44747; /* red */
+}
+
+body.dark-mode .code-content .attribute {
+    color: #9cdcfe; /* light blue */
+}

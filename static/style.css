@@ -137,7 +137,7 @@ body.dark-mode .footer .bar {
 
 /* Microphone Button Styles */
 .mic-btn {
-    padding: 8px;
+    padding: 0;
     border: none;
     background-color: transparent;
     color: #3b82f6;
@@ -147,14 +147,23 @@ body.dark-mode .footer .bar {
     display: flex;
     align-items: center;
     justify-content: center;
+    outline: none; /* Remove outline on focus */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
 .mic-btn:hover {
-    background-color: rgba(59, 130, 246, 0.1);
+    background-color: transparent;
+}
+
+.mic-btn:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
 }
 
 .mic-btn.active {
     color: #f44336; /* Red when active in light mode */
+    background-color: transparent;
 }
 
 body.dark-mode .mic-btn {
@@ -162,11 +171,12 @@ body.dark-mode .mic-btn {
 }
 
 body.dark-mode .mic-btn:hover {
-    background-color: rgba(206, 23, 160, 0.1);
+    background-color: transparent;
 }
 
 body.dark-mode .mic-btn.active {
     color: #ff4081; /* Pink when active in dark mode */
+    background-color: transparent;
 }
 
 /* SVG Microphone Icon */

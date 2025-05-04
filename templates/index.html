@@ -3,17 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- Permission policy for microphone access -->
-    <meta http-equiv="permissions-policy" content="microphone=*, camera=()">
-    <!-- Additional permissions for Android WebView -->
-    <meta http-equiv="origin-trial" content="microphone">
-    <!-- WebIntoApp specific microphone permission handling -->
-    <meta name="android-microphone-permission" content="true">
-    <meta name="android-speech-recognition-permission" content="true">
     <title>Smart Chatbot</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -69,15 +58,6 @@
                 <img src="static/sendlight.png" alt="Send" class="send-icon" id="sendIcon">
             </button>
         </footer>
-    </div>
-
-    <!-- Microphone permission overlay for mobile apps -->
-    <div id="permissionOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; padding: 20px;">
-        <h2>Microphone Permission Required</h2>
-        <p>This app needs microphone access to enable voice input.</p>
-        <p>Please tap the button below to grant permission.</p>
-        <button id="requestPermissionBtn" style="background: #4CAF50; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-size: 16px; margin-top: 20px; cursor: pointer;">Grant Microphone Access</button>
-        <p style="margin-top: 20px; font-size: 14px;">If you've denied permission, please go to your device settings to enable the microphone for this app.</p>
     </div>
 
     <!-- JS Scripts -->

@@ -187,19 +187,19 @@ function highlightCode(code, language) {
             // First, process includes with angle brackets
             let processedCode = escapedCode.replace(
                 /(#include\s*)&lt;([^&>]+)&gt;/g, 
-                '$1<span class="preprocessor">#include</span> <span class="string">&lt;$2&gt;</span>'
+                '<span class="preprocessor">$1</span><span class="string">&lt;$2&gt;</span>'
             );
             
             // Then process includes with quotes
             processedCode = processedCode.replace(
                 /(#include\s*)(".*?")/g,
-                '$1<span class="preprocessor">#include</span> <span class="string">$2</span>'
+                '<span class="preprocessor">$1</span><span class="string">$2</span>'
             );
             
-            // Process other preprocessor directives
+            // Process other preprocessor directives (that aren't already handled)
             processedCode = processedCode.replace(
-                /(#\w+)(?!\s*&lt;)/g,
-                '<span class="preprocessor">$1</span>'
+                /#(\w+)(?!\s*&lt;)(?!\s*")/g,
+                '<span class="preprocessor">#$1</span>'
             );
             
             // Now apply the rest of the syntax highlighting

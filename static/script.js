@@ -531,16 +531,14 @@ function updateCopyIcon(copyIcon) {
 // Speech Recognition Variables
 let recognition;
 let isRecording = false;
-let audioContext;
 let analyser;
-let microphone;
 let dataArray;
 let animationFrameId;
-let finalTranscript = "";
+let audioContext;
+let bars = [];
 let mediaStream = null;
 const micBtn = document.getElementById('micBtn');
 const voiceWaveContainer = document.getElementById('voiceWaveContainer');
-const bars = document.querySelectorAll('.bar');
 
 // Initialize Speech Recognition
 function initSpeechRecognition() {
@@ -684,65 +682,207 @@ function toggleRecording() {
 // Start recording audio
 function startRecording() {
     try {
-        // Request microphone permission explicitly for mobile apps
+        // Check if the microphone button exists
+        const micButton = document.getElementById('micButton');
+        if (!micButton) {
+            console.error("Microphone button not found");
+            return;
+        }
+
+        // Check if we're already recording
+        if (isRecording) {
+            console.log("Already recording, stopping first");
+            stopRecording();
+            // Give a small delay before starting again
+            setTimeout(() => startRecording(), 300);
+            return;
+        }
+
+        // Update UI to show we're attempting to record
+        micButton.classList.add('recording');
+        document.getElementById('voiceWaveContainer').style.display = 'flex';
+        
+        // Request microphone permission explicitly
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(function(stream) {
-                    console.log("Microphone permission granted");
-                    
-                    // Initialize audio context for visualization
+            console.log("Requesting microphone access...");
+            
+            // First try to get audio context
+            try {
+                // Create audio context if it doesn't exist
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } else if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            } catch (audioErr) {
+                console.warn("Could not initialize audio context:", audioErr);
+                // Continue anyway as we might still get speech recognition
+            }
+            
+            // Request microphone access
+            navigator.mediaDevices.getUserMedia({ 
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            })
+            .then(function(stream) {
+                console.log("Microphone permission granted");
+                
+                // Store the stream for later cleanup
+                mediaStream = stream;
+                
+                // Setup audio context for visualization if possible
+                try {
                     setupAudioContext(stream);
+                } catch (err) {
+                    console.warn("Could not setup audio visualization:", err);
+                    // Continue anyway as we can still do speech recognition
+                }
+                
+                // Start speech recognition
+                try {
+                    if (!recognition) {
+                        initSpeechRecognition();
+                    }
                     
-                    // Start speech recognition
-                    recognition.start();
-                    
-                    // Update UI
-                    document.getElementById('micButton').classList.add('recording');
-                    document.getElementById('voiceWaveContainer').style.display = 'flex';
-                    
-                    // Start visualization
-                    animationFrameId = requestAnimationFrame(visualizeAudio);
-                })
-                .catch(function(err) {
-                    console.error("Error accessing microphone:", err);
-                    alert("Could not access microphone. Please check your permissions.");
-                });
+                    if (recognition) {
+                        recognition.start();
+                        console.log("Speech recognition started");
+                        
+                        // Start visualization if we have the analyser
+                        if (analyser && dataArray) {
+                            animationFrameId = requestAnimationFrame(visualizeAudio);
+                        }
+                    } else {
+                        console.error("Speech recognition not available");
+                        alert("Speech recognition is not supported in this browser or environment.");
+                        stopRecording();
+                    }
+                } catch (recognitionErr) {
+                    console.error("Error starting speech recognition:", recognitionErr);
+                    alert("Error starting speech recognition. Please try again.");
+                    stopRecording();
+                }
+            })
+            .catch(function(err) {
+                console.error("Error accessing microphone:", err);
+                
+                // Provide more specific error messages based on the error
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    alert("Microphone access was denied. Please allow microphone access in your browser settings and try again.");
+                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                    alert("No microphone found. Please connect a microphone and try again.");
+                } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                    alert("Your microphone is busy or not readable. Please close other applications that might be using your microphone.");
+                } else if (err.name === 'OverconstrainedError') {
+                    alert("Microphone constraints cannot be satisfied. Please try a different microphone.");
+                } else if (err.name === 'TypeError') {
+                    alert("No microphone available or permission denied.");
+                } else {
+                    alert("Could not access microphone. Error: " + (err.message || err.name || "Unknown error"));
+                }
+                
+                stopRecording();
+            });
         } else {
             // Fallback for browsers without mediaDevices
-            recognition.start();
-            document.getElementById('micButton').classList.add('recording');
-            document.getElementById('voiceWaveContainer').style.display = 'flex';
+            console.warn("MediaDevices API not available, trying direct speech recognition");
+            
+            try {
+                if (!recognition) {
+                    initSpeechRecognition();
+                }
+                
+                if (recognition) {
+                    recognition.start();
+                    console.log("Speech recognition started (fallback)");
+                } else {
+                    console.error("Speech recognition not available (fallback)");
+                    alert("Speech recognition is not supported in this browser or environment.");
+                    stopRecording();
+                }
+            } catch (fallbackErr) {
+                console.error("Error starting speech recognition (fallback):", fallbackErr);
+                alert("Could not access microphone. Your browser may not support this feature or permission was denied.");
+                stopRecording();
+            }
         }
     } catch (error) {
         console.error("Error starting recording:", error);
+        alert("An unexpected error occurred while trying to access the microphone. Please try again.");
+        
+        // Reset UI
+        const micButton = document.getElementById('micButton');
+        if (micButton) micButton.classList.remove('recording');
+        
+        const voiceWaveContainer = document.getElementById('voiceWaveContainer');
+        if (voiceWaveContainer) voiceWaveContainer.style.display = 'none';
+        
+        isRecording = false;
     }
 }
 
 // Stop recording audio
 function stopRecording() {
     try {
-        if (recognition) {
-            recognition.stop();
-        }
+        isRecording = false;
         
-        // Stop audio context if it exists
-        if (audioContext && audioContext.state !== 'closed') {
-            if (audioContext.close) {
-                audioContext.close();
+        // Stop speech recognition
+        if (recognition) {
+            try {
+                recognition.stop();
+                console.log("Speech recognition stopped");
+            } catch (e) {
+                console.warn("Error stopping recognition:", e);
             }
         }
         
-        // Stop animation
+        // Stop audio visualization
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
         }
         
-        // Update UI
-        document.getElementById('micButton').classList.remove('recording');
-        document.getElementById('voiceWaveContainer').style.display = 'none';
+        // Close audio context
+        if (audioContext && audioContext.state !== 'closed') {
+            try {
+                if (audioContext.close) {
+                    audioContext.close().catch(err => console.warn("Error closing audio context:", err));
+                }
+            } catch (e) {
+                console.warn("Error closing audio context:", e);
+            }
+            audioContext = null;
+        }
         
-        isRecording = false;
+        // Release microphone
+        if (mediaStream) {
+            try {
+                mediaStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+                console.log("Media stream tracks stopped");
+            } catch (e) {
+                console.warn("Error stopping media stream tracks:", e);
+            }
+            mediaStream = null;
+        }
+        
+        // Reset UI
+        const micButton = document.getElementById('micButton');
+        if (micButton) micButton.classList.remove('recording');
+        
+        const voiceWaveContainer = document.getElementById('voiceWaveContainer');
+        if (voiceWaveContainer) voiceWaveContainer.style.display = 'none';
+        
+        // Reset wave bars
+        if (bars && bars.length > 0) {
+            bars.forEach(bar => {
+                if (bar) bar.style.height = '3px';
+            });
+        }
     } catch (error) {
         console.error("Error stopping recording:", error);
     }
@@ -811,4 +951,57 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize speech recognition
     initSpeechRecognition();
+    
+    // Setup permission overlay for mobile apps
+    setupPermissionOverlay();
 });
+
+// Setup permission overlay for mobile apps
+function setupPermissionOverlay() {
+    // Check if we're in a mobile app environment
+    const isWebView = navigator.userAgent.includes('wv') || 
+                      window.navigator.standalone || 
+                      window.matchMedia('(display-mode: standalone)').matches;
+    
+    if (isWebView) {
+        console.log("Mobile app environment detected, setting up permission overlay");
+        
+        const overlay = document.getElementById('permissionOverlay');
+        const requestBtn = document.getElementById('requestPermissionBtn');
+        
+        if (overlay && requestBtn) {
+            // Initially hide the overlay
+            overlay.style.display = 'none';
+            
+            // Add click handler to the permission button
+            requestBtn.addEventListener('click', function() {
+                // Hide the overlay
+                overlay.style.display = 'none';
+                
+                // Request microphone permission
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then(function(stream) {
+                            console.log("Microphone permission granted via overlay");
+                            // Stop the tracks immediately, we just wanted permission
+                            stream.getTracks().forEach(track => track.stop());
+                        })
+                        .catch(function(err) {
+                            console.error("Error accessing microphone from overlay:", err);
+                            // Show the overlay again with error message
+                            document.querySelector('#permissionOverlay p:nth-child(2)').textContent = 
+                                "Microphone access was denied. Please enable it in your device settings.";
+                            overlay.style.display = 'flex';
+                        });
+                }
+            });
+            
+            // Check if we need to show the permission overlay
+            // We'll show it on first load in a WebView environment
+            if (localStorage.getItem('micPermissionRequested') !== 'true') {
+                overlay.style.display = 'flex';
+                localStorage.setItem('micPermissionRequested', 'true');
+            }
+        }
+    }
+}

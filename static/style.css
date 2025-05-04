@@ -47,7 +47,7 @@ html, body {
 /* Chat title */
 .chat-title {
     text-align: center;
-    font-size: 8vw;
+    font-size: 7vw;
     font-weight: 700;
     margin: 2vh 0;
     transition: color 0.3s ease;

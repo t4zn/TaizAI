@@ -183,14 +183,33 @@ function highlightCode(code, language) {
             });
         case 'c':
         case 'cpp':
-            return highlightSyntax(escapedCode, {
+            // For C/C++, we need special handling for include directives
+            // First, process includes with angle brackets
+            let processedCode = escapedCode.replace(
+                /(#include\s*)&lt;([^&>]+)&gt;/g, 
+                '$1<span class="preprocessor">#include</span> <span class="string">&lt;$2&gt;</span>'
+            );
+            
+            // Then process includes with quotes
+            processedCode = processedCode.replace(
+                /(#include\s*)(".*?")/g,
+                '$1<span class="preprocessor">#include</span> <span class="string">$2</span>'
+            );
+            
+            // Process other preprocessor directives
+            processedCode = processedCode.replace(
+                /(#\w+)(?!\s*&lt;)/g,
+                '<span class="preprocessor">$1</span>'
+            );
+            
+            // Now apply the rest of the syntax highlighting
+            return highlightSyntax(processedCode, {
                 keywords: ['int', 'char', 'float', 'double', 'void', 'struct', 'enum', 'typedef', 'const', 'static', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'sizeof', 'using', 'namespace', 'class', 'public', 'private', 'protected', 'template', 'typename', 'virtual', 'friend', 'operator', 'new', 'delete'],
-                preprocessor: /#\w+/g,
                 stringPattern: /("(?:\\.|[^"\\])*")/g,
                 commentPatterns: [/\/\/[^\n]*/g, /\/\*[\s\S]*?\*\//g],
                 functionPattern: /\b(\w+)(?=\s*\()/g,
                 numberPattern: /\b(\d+(?:\.\d+)?)\b/g,
-                includePattern: /#include\s*(?:<([^>]+)>|"([^"]+)")/g
+                skipPreprocessor: true // Skip preprocessor since we've already handled it
             });
         default:
             return escapedCode;
@@ -209,39 +228,6 @@ function highlightSyntax(code, options) {
     // Array to store all the spans we'll create
     const spans = [];
     
-    // Special handling for C/C++ includes
-    if (options.includePattern) {
-        let match;
-        while ((match = options.includePattern.exec(codeText)) !== null) {
-            // First mark the entire #include statement
-            spans.push({
-                start: match.index,
-                end: match.index + match[0].length,
-                class: 'preprocessor',
-                text: match[0]
-            });
-            
-            // Then mark the header name specifically
-            if (match[1]) { // <header> style
-                const headerStart = match.index + match[0].indexOf('<');
-                spans.push({
-                    start: headerStart,
-                    end: headerStart + match[1].length + 2, // +2 for < and >
-                    class: 'string',
-                    text: `<${match[1]}>`
-                });
-            } else if (match[2]) { // "header" style
-                const headerStart = match.index + match[0].indexOf('"');
-                spans.push({
-                    start: headerStart,
-                    end: headerStart + match[2].length + 2, // +2 for quotes
-                    class: 'string',
-                    text: `"${match[2]}"`
-                });
-            }
-        }
-    }
-    
     // Process keywords
     if (options.keywords) {
         options.keywords.forEach(keyword => {
@@ -259,18 +245,13 @@ function highlightSyntax(code, options) {
     }
     
     // Process preprocessor directives
-    if (options.preprocessor) {
+    if (options.preprocessor && !options.skipPreprocessor) {
         let match;
         while ((match = options.preprocessor.exec(codeText)) !== null) {
-            // Skip if this is part of an #include that we've already processed
-            if (options.includePattern && codeText.substring(match.index, match.index + 9) === '#include') {
-                continue;
-            }
-            
             spans.push({
                 start: match.index,
                 end: match.index + match[0].length,
-                class: 'keyword',
+                class: 'preprocessor',
                 text: match[0]
             });
         }
@@ -328,6 +309,11 @@ function highlightSyntax(code, options) {
                 text: match[0]
             });
         }
+    }
+    
+    // If the code already has HTML tags, return it as is
+    if (result.includes('<span class=')) {
+        return result;
     }
     
     // Sort spans by start position (in reverse order to avoid position shifts)
@@ -558,238 +544,271 @@ const bars = document.querySelectorAll('.bar');
 
 // Initialize Speech Recognition
 function initSpeechRecognition() {
-    // Check browser support
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        console.error("Your browser doesn't support speech recognition. Try Chrome or Edge.");
-        if (micBtn) micBtn.style.display = 'none';
-        return;
+    try {
+        // Check if running in a WebView (likely a mobile app)
+        const isWebView = navigator.userAgent.includes('wv') || 
+                          window.navigator.standalone || 
+                          window.matchMedia('(display-mode: standalone)').matches;
+        
+        // Create speech recognition object with appropriate fallbacks
+        window.SpeechRecognition = window.SpeechRecognition || 
+                                  window.webkitSpeechRecognition || 
+                                  window.mozSpeechRecognition || 
+                                  window.msSpeechRecognition;
+        
+        // If we're in a WebView, add additional logging for debugging
+        if (isWebView) {
+            console.log("Running in WebView/Mobile App environment");
+            console.log("UserAgent: " + navigator.userAgent);
+            console.log("SpeechRecognition available: " + (!!window.SpeechRecognition));
+        }
+        
+        // If SpeechRecognition is not available, disable the microphone button
+        if (!window.SpeechRecognition) {
+            console.error("Speech recognition not supported in this browser/environment");
+            const micButton = document.getElementById('micButton');
+            if (micButton) {
+                micButton.disabled = true;
+                micButton.style.opacity = 0.5;
+                micButton.title = "Speech recognition not available in this environment";
+            }
+            return false;
+        }
+        
+        // Initialize the recognition object
+        recognition = new window.SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US'; // Set language
+        
+        // Add event handlers
+        recognition.onstart = function() {
+            console.log("Speech recognition started");
+            isRecording = true;
+        };
+        
+        recognition.onend = function() {
+            console.log("Speech recognition ended");
+            isRecording = false;
+            
+            // Stop the visualization
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            
+            // Reset the wave bars
+            if (bars && bars.length > 0) {
+                bars.forEach(bar => {
+                    bar.style.height = '3px';
+                });
+            }
+        };
+        
+        recognition.onerror = function(event) {
+            console.error("Speech recognition error", event.error);
+            // Show error message to user
+            if (event.error === 'not-allowed') {
+                alert("Microphone access was denied. Please allow microphone access to use voice input.");
+            } else if (event.error === 'no-speech') {
+                console.log("No speech detected");
+            } else {
+                console.log("Error occurred in recognition: " + event.error);
+            }
+            
+            stopRecording();
+        };
+        
+        recognition.onresult = handleRecognitionResult;
+        
+        return true;
+    } catch (error) {
+        console.error("Error initializing speech recognition:", error);
+        return false;
     }
-
-    // Create speech recognition instance
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    
-    // Configure recognition
-    recognition.continuous = false;
-    recognition.interimResults = false; // Only get final results to avoid repetition
-    recognition.maxAlternatives = 1;
-    recognition.lang = 'en-US';
 }
 
-// Initialize Audio Context for waveform visualization
-function initAudioContext() {
+// Handle the results from speech recognition
+function handleRecognitionResult(event) {
+    const inputField = document.getElementById('userInput');
+    let finalTranscript = '';
+    let interimTranscript = '';
+    
+    // Get current cursor position
+    const cursorPos = inputField.selectionStart;
+    const textBeforeCursor = inputField.value.substring(0, cursorPos);
+    const textAfterCursor = inputField.value.substring(cursorPos);
+    
+    // Process the recognition results
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        
+        if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+        } else {
+            interimTranscript += transcript;
+        }
+    }
+    
+    // Only update if we have something new
+    if (finalTranscript || interimTranscript) {
+        // Insert at cursor position
+        inputField.value = textBeforeCursor + (finalTranscript || interimTranscript) + textAfterCursor;
+        
+        // Move cursor to end of inserted text
+        const newCursorPos = cursorPos + (finalTranscript || interimTranscript).length;
+        inputField.setSelectionRange(newCursorPos, newCursorPos);
+        
+        // Auto-resize the textarea
+        autoResizeTextarea(inputField);
+    }
+}
+
+// Toggle microphone recording
+function toggleRecording() {
+    if (!recognition) {
+        const initialized = initSpeechRecognition();
+        if (!initialized) {
+            console.error("Could not initialize speech recognition");
+            return;
+        }
+    }
+    
+    if (isRecording) {
+        stopRecording();
+    } else {
+        startRecording();
+    }
+}
+
+// Start recording audio
+function startRecording() {
+    try {
+        // Request microphone permission explicitly for mobile apps
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function(stream) {
+                    console.log("Microphone permission granted");
+                    
+                    // Initialize audio context for visualization
+                    setupAudioContext(stream);
+                    
+                    // Start speech recognition
+                    recognition.start();
+                    
+                    // Update UI
+                    document.getElementById('micButton').classList.add('recording');
+                    document.getElementById('voiceWaveContainer').style.display = 'flex';
+                    
+                    // Start visualization
+                    animationFrameId = requestAnimationFrame(visualizeAudio);
+                })
+                .catch(function(err) {
+                    console.error("Error accessing microphone:", err);
+                    alert("Could not access microphone. Please check your permissions.");
+                });
+        } else {
+            // Fallback for browsers without mediaDevices
+            recognition.start();
+            document.getElementById('micButton').classList.add('recording');
+            document.getElementById('voiceWaveContainer').style.display = 'flex';
+        }
+    } catch (error) {
+        console.error("Error starting recording:", error);
+    }
+}
+
+// Stop recording audio
+function stopRecording() {
+    try {
+        if (recognition) {
+            recognition.stop();
+        }
+        
+        // Stop audio context if it exists
+        if (audioContext && audioContext.state !== 'closed') {
+            if (audioContext.close) {
+                audioContext.close();
+            }
+        }
+        
+        // Stop animation
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+        
+        // Update UI
+        document.getElementById('micButton').classList.remove('recording');
+        document.getElementById('voiceWaveContainer').style.display = 'none';
+        
+        isRecording = false;
+    } catch (error) {
+        console.error("Error stopping recording:", error);
+    }
+}
+
+// Setup audio context for visualization
+function setupAudioContext(stream) {
     try {
         // Create audio context
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Create analyser node
+        // Create analyser
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 256;
-        analyser.smoothingTimeConstant = 0.7; // Smoother transitions
         
-        // Get microphone access
-        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then(stream => {
-                // Store the stream for later cleanup
-                mediaStream = stream;
-                
-                // Connect microphone to analyser
-                microphone = audioContext.createMediaStreamSource(stream);
-                microphone.connect(analyser);
-                
-                // Create data array for frequency analysis
-                dataArray = new Uint8Array(analyser.frequencyBinCount);
-                
-                // Start visualizing
-                visualizeAudio();
-            })
-            .catch(err => {
-                console.error('Error accessing microphone:', err);
-                stopRecording();
-            });
-    } catch (err) {
-        console.error('Error initializing audio context:', err);
-    }
-}
-
-// Start recording
-function startRecording() {
-    if (!recognition) initSpeechRecognition();
-    
-    // Save current input value
-    const userInput = document.getElementById('userInput');
-    finalTranscript = userInput.value || "";
-    
-    isRecording = true;
-    
-    // Set up new recognition session
-    recognition.onresult = function(event) {
-        // Get the last result (most accurate)
-        const transcript = event.results[0][0].transcript;
+        // Connect microphone to analyser
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
         
-        // Add a space if needed
-        if (finalTranscript && finalTranscript.trim().length > 0 && 
-            !finalTranscript.endsWith(' ') && !transcript.startsWith(' ')) {
-            finalTranscript += ' ';
-        }
+        // Create data array for frequency data
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
         
-        // Add new transcript to existing text
-        finalTranscript += transcript;
-        userInput.value = finalTranscript;
-    };
-    
-    recognition.onend = function() {
-        if (isRecording) {
-            // Start a new session after a short delay
-            setTimeout(() => {
-                if (isRecording) {
-                    try {
-                        recognition.start();
-                    } catch (e) {
-                        console.error('Error restarting recognition:', e);
-                    }
-                }
-            }, 300);
-        }
-    };
-    
-    recognition.onerror = function(event) {
-        console.error('Speech recognition error:', event.error);
-        if (event.error === 'no-speech') {
-            // Just restart if no speech detected
-            if (isRecording) {
-                setTimeout(() => {
-                    if (isRecording) {
-                        try {
-                            recognition.start();
-                        } catch (e) {
-                            console.error('Error restarting after no-speech:', e);
-                        }
-                    }
-                }, 300);
-            }
-        } else if (event.error === 'aborted' || event.error === 'network') {
-            // These are usually temporary, try to restart
-            setTimeout(() => {
-                if (isRecording) {
-                    try {
-                        recognition.start();
-                    } catch (e) {
-                        console.error('Error restarting after abort/network error:', e);
-                    }
-                }
-            }, 500);
-        } else {
-            // For other errors, stop recording
-            stopRecording();
-        }
-    };
-    
-    // Start recognition
-    try {
-        recognition.start();
-        console.log('Speech recognition started');
-        
-        // Show voice wave container
-        voiceWaveContainer.style.display = 'flex';
-        
-        // Initialize audio context for visualization
-        if (!audioContext) {
-            initAudioContext();
-        } else if (audioContext.state === 'suspended') {
-            audioContext.resume();
-        }
-        
-        // Change microphone button appearance
-        micBtn.classList.add('active');
-    } catch (e) {
-        console.error('Error starting recognition:', e);
+        // Get the bars for visualization
+        bars = Array.from(document.querySelectorAll('.voice-wave-bar'));
+    } catch (error) {
+        console.error("Error setting up audio context:", error);
     }
-}
-
-// Stop recording
-function stopRecording() {
-    isRecording = false;
-    
-    // Stop speech recognition
-    if (recognition) {
-        try {
-            recognition.abort();
-        } catch (e) {
-            console.error('Error stopping recognition:', e);
-        }
-    }
-    
-    // Hide voice wave container
-    voiceWaveContainer.style.display = 'none';
-    
-    // Stop audio visualization
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = null;
-    }
-    
-    // Disconnect microphone if connected
-    if (microphone) {
-        microphone.disconnect();
-        microphone = null;
-    }
-    
-    // Close audio context
-    if (audioContext) {
-        try {
-            audioContext.close();
-            audioContext = null;
-        } catch (e) {
-            console.error('Error closing audio context:', e);
-        }
-    }
-    
-    // Stop all tracks in the media stream to release microphone
-    if (mediaStream) {
-        mediaStream.getTracks().forEach(track => {
-            track.stop();
-        });
-        mediaStream = null;
-    }
-    
-    // Reset microphone button appearance
-    micBtn.classList.remove('active');
 }
 
 // Visualize audio data
 function visualizeAudio() {
     if (!isRecording) return;
     
-    // Get frequency data
-    analyser.getByteFrequencyData(dataArray);
-    
-    // Calculate average volume
-    let sum = 0;
-    for (let i = 0; i < dataArray.length; i++) {
-        sum += dataArray[i];
-    }
-    const average = sum / dataArray.length;
-    
-    // Determine if there's actual speech (threshold detection)
-    const isSpeaking = average > 10; // Adjust threshold as needed
-    
-    // Update each bar's height based on volume
-    bars.forEach((bar, index) => {
-        if (isSpeaking) {
-            // Use different frequency bands for each bar
-            const bandIndex = Math.floor(index * (dataArray.length / bars.length));
-            const frequencyValue = dataArray[bandIndex];
-            
-            // Scale height based on frequency value (min 3px, max 20px)
-            const height = 3 + ((frequencyValue / 255) * 17);
-            bar.style.height = `${height}px`;
-        } else {
-            // When silent, keep bars at minimum height
-            bar.style.height = '3px';
+    try {
+        // Get frequency data
+        analyser.getByteFrequencyData(dataArray);
+        
+        // Calculate average volume
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
         }
-    });
-    
-    // Continue animation
-    animationFrameId = requestAnimationFrame(visualizeAudio);
+        const average = sum / dataArray.length;
+        
+        // Update each bar's height based on volume
+        bars.forEach((bar, index) => {
+            // Use different frequency bands for each bar
+            const frequencyValue = dataArray[Math.floor(index * (dataArray.length / bars.length))];
+            const height = Math.max(20, Math.min(80, frequencyValue * 0.8));
+            bar.style.height = `${height}px`;
+        });
+        
+        // Continue animation
+        animationFrameId = requestAnimationFrame(visualizeAudio);
+    } catch (error) {
+        console.error("Error visualizing audio:", error);
+    }
 }
+
+// Add event listener for microphone button
+document.addEventListener('DOMContentLoaded', function() {
+    const micButton = document.getElementById('micButton');
+    if (micButton) {
+        micButton.addEventListener('click', toggleRecording);
+    }
+    
+    // Initialize speech recognition
+    initSpeechRecognition();
+});

@@ -30,7 +30,7 @@ async function askBot() {
     
     const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
-    if (!userText) return;
+    if (!userText && !currentImage) return;
 
     appendMessage(userText, 'user');
     inputField.value = '';
@@ -42,11 +42,17 @@ async function askBot() {
         const response = await fetch('/api/ask', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userText })
+            body: JSON.stringify({ 
+                message: userText,
+                image: currentImage
+            })
         });
 
         const data = await response.json();
         appendBotMessage(data.reply);
+        
+        // Clear current image after sending
+        currentImage = null;
     } catch (error) {
         appendBotMessage("⚠️ Error connecting to server.");
     }
@@ -792,4 +798,81 @@ function visualizeAudio() {
     
     // Continue animation
     animationFrameId = requestAnimationFrame(visualizeAudio);
+}
+
+// Image Upload Functionality
+const imageBtn = document.getElementById('imageBtn');
+const imageUploadPopup = document.getElementById('imageUploadPopup');
+const takePhotoBtn = document.getElementById('takePhotoBtn');
+const attachImageBtn = document.getElementById('attachImageBtn');
+const imageInput = document.getElementById('imageInput');
+let currentImage = null;
+
+// Show/hide image upload popup
+imageBtn.addEventListener('click', () => {
+    imageUploadPopup.style.display = 'block';
+});
+
+// Close popup when clicking outside
+document.addEventListener('click', (e) => {
+    if (!imageUploadPopup.contains(e.target) && e.target !== imageBtn) {
+        imageUploadPopup.style.display = 'none';
+    }
+});
+
+// Handle file attachment
+attachImageBtn.addEventListener('click', () => {
+    imageInput.click();
+});
+
+imageInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        handleImageFile(file);
+    }
+});
+
+// Handle camera capture
+takePhotoBtn.addEventListener('click', async () => {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        await video.play();
+
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+
+        // Stop all tracks
+        stream.getTracks().forEach(track => track.stop());
+
+        // Convert to blob and handle
+        canvas.toBlob(blob => {
+            handleImageFile(blob);
+        }, 'image/jpeg');
+    } catch (err) {
+        console.error('Error accessing camera:', err);
+        alert('Could not access camera. Please make sure you have granted camera permissions.');
+    }
+});
+
+// Handle image file (both from camera and file input)
+function handleImageFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        currentImage = e.target.result;
+        imageUploadPopup.style.display = 'none';
+        
+        // Show image preview in chat
+        const chatBox = document.getElementById('chatBox');
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'message user';
+        previewDiv.innerHTML = `<img src="${currentImage}" class="image-preview" style="display: block;">`;
+        chatBox.appendChild(previewDiv);
+        smartScrollToBottom();
+    };
+    reader.readAsDataURL(file);
 }

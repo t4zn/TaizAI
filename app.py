@@ -17,6 +17,7 @@ CORS(app)
 
 def setup_google_credentials():
     try:
+        # First try to get credentials from environment variable
         if 'GOOGLE_APPLICATION_CREDENTIALS_JSON' in os.environ:
             credentials_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON']
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.json')
@@ -24,6 +25,12 @@ def setup_google_credentials():
             temp_file.close()
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = temp_file.name
             return True
+        
+        # If not found in environment, try to load from .env file
+        credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+        if credentials_path and os.path.exists(credentials_path):
+            return True
+            
         return False
     except Exception as e:
         print(f"Error setting up credentials: {str(e)}")

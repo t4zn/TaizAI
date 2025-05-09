@@ -31,13 +31,8 @@ async function askBot() {
     const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
     
-    // Only proceed if there's text input or an image
-    if (!userText && !currentImage) return;
-
-    // If there's an image but no text, don't send yet
-    if (currentImage && !userText) {
-        return;
-    }
+    // Only proceed if there's text input
+    if (!userText) return;
 
     appendMessage(userText, 'user');
     inputField.value = '';

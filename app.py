@@ -7,11 +7,21 @@ from google.cloud import vision
 from PIL import Image
 import io
 import base64
+import json
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+# Set up Google Cloud credentials
+if 'GOOGLE_APPLICATION_CREDENTIALS_JSON' in os.environ:
+    # Create a temporary credentials file
+    credentials_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON']
+    credentials_path = '/tmp/google-credentials.json'
+    with open(credentials_path, 'w') as f:
+        f.write(credentials_json)
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 
 API_KEY = os.getenv("API_KEY")
 

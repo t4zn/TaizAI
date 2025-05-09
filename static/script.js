@@ -50,13 +50,18 @@ async function askBot() {
             })
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         appendBotMessage(data.reply);
         
         // Clear current image after sending
         currentImage = null;
     } catch (error) {
-        appendBotMessage("⚠️ Error connecting to server.");
+        console.error('Error:', error);
+        appendBotMessage("⚠️ Error connecting to server. Please try again.");
     }
 }
 
@@ -830,7 +835,7 @@ function handleImageFile(file) {
         const chatBox = document.getElementById('chatBox');
         const previewDiv = document.createElement('div');
         previewDiv.className = 'message user';
-        previewDiv.innerHTML = `<img src="${currentImage}" class="image-preview" style="display: block;">`;
+        previewDiv.innerHTML = `<img src="${currentImage}" class="image-preview" style="display: block; max-width: 200px; max-height: 200px;">`;
         chatBox.appendChild(previewDiv);
         smartScrollToBottom();
     };

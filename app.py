@@ -9,6 +9,11 @@ import io
 import base64
 import json
 import tempfile
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -33,12 +38,12 @@ def setup_google_credentials():
             
         return False
     except Exception as e:
-        print(f"Error setting up credentials: {str(e)}")
+        logger.error(f"Error setting up credentials: {str(e)}")
         return False
 
 # Set up credentials
 if not setup_google_credentials():
-    print("Warning: Google Cloud credentials not found. Image analysis features will not work.")
+    logger.error("Google Cloud credentials not found. Image analysis features will not work.")
 
 API_KEY = os.getenv("API_KEY")
 if not API_KEY:
@@ -53,8 +58,9 @@ model = genai.GenerativeModel('gemini-1.5-flash')  # or 'gemini-pro'
 # Initialize Google Vision client
 try:
     vision_client = vision.ImageAnnotatorClient()
+    logger.info("Successfully initialized Vision client")
 except Exception as e:
-    print(f"Warning: Failed to initialize Vision client: {str(e)}")
+    logger.error(f"Failed to initialize Vision client: {str(e)}")
     vision_client = None
 
 # Route to serve the HTML page
@@ -105,15 +111,20 @@ Consider all the detected elements and provide a comprehensive answer."""
                 return jsonify({"reply": response.text})
 
             except Exception as e:
-                print(f"Error processing image: {str(e)}")
-                return jsonify({"reply": f"I apologize, but I encountered an error while analyzing the image. Please try again or ask a different question."}), 500
+                logger.error(f"Error processing image: {str(e)}")
+                return jsonify({
+                    "reply": "I apologize, but I encountered an error while analyzing the image. Please make sure the image is clear and try again. If the problem persists, please try a different image or question."
+                }), 500
 
         # If no image, just process the text message
         response = model.generate_content(user_message)
         return jsonify({"reply": response.text})
 
     except Exception as e:
-        return jsonify({"reply": f"Error occurred: {str(e)}"}), 500
+        logger.error(f"Error in /api/ask: {str(e)}")
+        return jsonify({
+            "reply": "I apologize, but I encountered an error processing your request. Please try again."
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')

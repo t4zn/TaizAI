@@ -30,8 +30,6 @@ async function askBot() {
     
     const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
-    
-    // Only proceed if there's text input
     if (!userText) return;
 
     appendMessage(userText, 'user');
@@ -44,24 +42,13 @@ async function askBot() {
         const response = await fetch('/api/ask', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                message: userText,
-                image: currentImage
-            })
+            body: JSON.stringify({ message: userText })
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
 
         const data = await response.json();
         appendBotMessage(data.reply);
-        
-        // Clear current image after sending
-        currentImage = null;
     } catch (error) {
-        console.error('Error:', error);
-        appendBotMessage("⚠️ Error connecting to server. Please try again.");
+        appendBotMessage("⚠️ Error connecting to server.");
     }
 }
 
@@ -805,39 +792,4 @@ function visualizeAudio() {
     
     // Continue animation
     animationFrameId = requestAnimationFrame(visualizeAudio);
-}
-
-// Image Upload Functionality
-const imageBtn = document.getElementById('imageBtn');
-const imageInput = document.getElementById('imageInput');
-let currentImage = null;
-
-// Handle image button click
-imageBtn.addEventListener('click', () => {
-    imageInput.click();
-});
-
-// Handle image selection
-imageInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        handleImageFile(file);
-    }
-});
-
-// Handle image file
-function handleImageFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        currentImage = e.target.result;
-        
-        // Show image preview in chat
-        const chatBox = document.getElementById('chatBox');
-        const previewDiv = document.createElement('div');
-        previewDiv.className = 'message user';
-        previewDiv.innerHTML = `<img src="${currentImage}" class="image-preview" style="display: block; max-width: 200px; max-height: 200px;">`;
-        chatBox.appendChild(previewDiv);
-        smartScrollToBottom();
-    };
-    reader.readAsDataURL(file);
 }

@@ -17,21 +17,13 @@ CORS(app)
 
 def setup_google_credentials():
     try:
-        # First try to get credentials from environment variable
         if 'GOOGLE_APPLICATION_CREDENTIALS_JSON' in os.environ:
             credentials_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON']
-            # Create a temporary file with the credentials
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.json')
             temp_file.write(credentials_json.encode())
             temp_file.close()
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = temp_file.name
             return True
-        
-        # If not found in environment, try to load from .env file
-        credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-        if credentials_path and os.path.exists(credentials_path):
-            return True
-            
         return False
     except Exception as e:
         print(f"Error setting up credentials: {str(e)}")
@@ -90,20 +82,26 @@ def ask():
                 labels = vision_client.label_detection(image=image).label_annotations
                 detected_labels = [label.description for label in labels]
 
-                # Combine all information
-                image_analysis = {
-                    "ocr_text": ocr_text,
-                    "detected_objects": detected_objects,
-                    "detected_labels": detected_labels
-                }
+                # Create a detailed image analysis prompt
+                image_analysis = f"""I have analyzed this image and found:
 
-                # Add image analysis to user message
-                user_message = f"Image Analysis:\nOCR Text: {ocr_text}\nDetected Objects: {', '.join(detected_objects)}\nDetected Labels: {', '.join(detected_labels)}\n\nUser Question: {user_message}"
+Text in the image (OCR): {ocr_text}
+Objects detected: {', '.join(detected_objects)}
+Labels/Tags: {', '.join(detected_labels)}
+
+Please analyze this image and provide a detailed response to the user's question: {user_message}
+
+Consider all the detected elements and provide a comprehensive answer."""
+
+                # Generate response using the image analysis
+                response = model.generate_content(image_analysis)
+                return jsonify({"reply": response.text})
+
             except Exception as e:
                 print(f"Error processing image: {str(e)}")
-                user_message = f"Error processing image: {str(e)}\n\nUser Question: {user_message}"
+                return jsonify({"reply": f"I apologize, but I encountered an error while analyzing the image. Please try again or ask a different question."}), 500
 
-        # Generate response using model
+        # If no image, just process the text message
         response = model.generate_content(user_message)
         return jsonify({"reply": response.text})
 

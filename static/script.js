@@ -30,7 +30,14 @@ async function askBot() {
     
     const inputField = document.getElementById('userInput');
     const userText = inputField.value.trim();
+    
+    // Only proceed if there's text input or an image
     if (!userText && !currentImage) return;
+
+    // If there's an image but no text, don't send yet
+    if (currentImage && !userText) {
+        return;
+    }
 
     appendMessage(userText, 'user');
     inputField.value = '';
@@ -802,40 +809,15 @@ function visualizeAudio() {
 
 // Image Upload Functionality
 const imageBtn = document.getElementById('imageBtn');
-const imageUploadPopup = document.getElementById('imageUploadPopup');
-const takePhotoBtn = document.getElementById('takePhotoBtn');
-const attachImageBtn = document.getElementById('attachImageBtn');
 const imageInput = document.getElementById('imageInput');
 let currentImage = null;
 
-// Show/hide image upload popup
-imageBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); // Prevent event from bubbling up
-    if (imageUploadPopup.style.display === 'block') {
-        imageUploadPopup.style.display = 'none';
-    } else {
-        imageUploadPopup.style.display = 'block';
-    }
-});
-
-// Close popup when clicking outside
-document.addEventListener('click', (e) => {
-    if (!imageUploadPopup.contains(e.target) && e.target !== imageBtn) {
-        imageUploadPopup.style.display = 'none';
-    }
-});
-
-// Prevent popup from closing when clicking inside it
-imageUploadPopup.addEventListener('click', (e) => {
-    e.stopPropagation();
-});
-
-// Handle file attachment
-attachImageBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
+// Handle image button click
+imageBtn.addEventListener('click', () => {
     imageInput.click();
 });
 
+// Handle image selection
 imageInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -843,40 +825,11 @@ imageInput.addEventListener('change', (e) => {
     }
 });
 
-// Handle camera capture
-takePhotoBtn.addEventListener('click', async (e) => {
-    e.stopPropagation();
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        await video.play();
-
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0);
-
-        // Stop all tracks
-        stream.getTracks().forEach(track => track.stop());
-
-        // Convert to blob and handle
-        canvas.toBlob(blob => {
-            handleImageFile(blob);
-        }, 'image/jpeg');
-    } catch (err) {
-        console.error('Error accessing camera:', err);
-        alert('Could not access camera. Please make sure you have granted camera permissions.');
-    }
-});
-
-// Handle image file (both from camera and file input)
+// Handle image file
 function handleImageFile(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
         currentImage = e.target.result;
-        imageUploadPopup.style.display = 'none';
         
         // Show image preview in chat
         const chatBox = document.getElementById('chatBox');

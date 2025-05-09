@@ -548,76 +548,6 @@ body.dark-mode .code-content .attribute {
     color: #9cdcfe; /* light blue */
 }
 
-/* Image Upload Popup */
-.image-upload-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #eaeaea;
-    border-radius: 36px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 4vw;
-    width: 80vw;
-    display: none;
-    z-index: 1001;
-    transition: background-color 0.3s;
-}
-
-body.dark-mode .image-upload-popup {
-    background-color: #1f1f1f;
-    border: 1px solid #ffffff;
-}
-
-.image-upload-popup .popup-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.image-upload-popup .popup-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    padding: 15px;
-    border-radius: 12px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-body.dark-mode .image-upload-popup .popup-btn {
-    background-color: #2a2a2a;
-    border: 1px solid #404040;
-    color: #ffffff;
-}
-
-.image-upload-popup .popup-btn:hover {
-    background-color: #f5f5f5;
-    transform: translateY(-2px);
-}
-
-body.dark-mode .image-upload-popup .popup-btn:hover {
-    background-color: #333333;
-}
-
-.image-upload-popup .popup-btn svg {
-    width: 24px;
-    height: 24px;
-}
-
-/* Image Preview */
-.image-preview {
-    max-width: 200px;
-    max-height: 200px;
-    margin: 10px 0;
-    border-radius: 8px;
-    display: none;
-    object-fit: contain;
-}
-
 /* Image Button */
 .image-btn {
     padding: 8px;
@@ -660,4 +590,14 @@ body.dark-mode .image-btn:hover {
 
 .image-btn:hover .plus-icon {
     transform: scale(1.1);
+}
+
+/* Image Preview */
+.image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 10px 0;
+    border-radius: 8px;
+    display: block;
+    object-fit: contain;
 }

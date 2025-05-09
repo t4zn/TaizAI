@@ -809,8 +809,13 @@ const imageInput = document.getElementById('imageInput');
 let currentImage = null;
 
 // Show/hide image upload popup
-imageBtn.addEventListener('click', () => {
-    imageUploadPopup.style.display = 'block';
+imageBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent event from bubbling up
+    if (imageUploadPopup.style.display === 'block') {
+        imageUploadPopup.style.display = 'none';
+    } else {
+        imageUploadPopup.style.display = 'block';
+    }
 });
 
 // Close popup when clicking outside
@@ -820,8 +825,14 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// Prevent popup from closing when clicking inside it
+imageUploadPopup.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
 // Handle file attachment
-attachImageBtn.addEventListener('click', () => {
+attachImageBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     imageInput.click();
 });
 
@@ -833,7 +844,8 @@ imageInput.addEventListener('change', (e) => {
 });
 
 // Handle camera capture
-takePhotoBtn.addEventListener('click', async () => {
+takePhotoBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.createElement('video');

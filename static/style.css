@@ -547,3 +547,85 @@ body.dark-mode .code-content .tag {
 body.dark-mode .code-content .attribute {
     color: #9cdcfe; /* light blue */
 }
+
+/* Image Button Styles */
+.image-btn {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: #000000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.image-btn:hover {
+    background-color: transparent;
+}
+
+.image-btn:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+body.dark-mode .image-btn {
+    color: #ffffff;
+}
+
+.plus-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.image-btn:hover .plus-icon {
+    transform: scale(1.1);
+}
+
+/* Image Upload Popup */
+.image-upload-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #eaeaea;
+    border-radius: 36px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 4vw;
+    width: 80vw;
+    display: none;
+    z-index: 1001;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .image-upload-popup {
+    background-color: #1f1f1f;
+    border: 1px solid #ffffff;
+}
+
+.image-upload-popup .popup-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.image-upload-popup .popup-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Image Preview */
+.image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 10px 0;
+    border-radius: 8px;
+    display: none;
+}
